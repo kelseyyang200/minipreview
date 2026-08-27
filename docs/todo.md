@@ -17,6 +17,8 @@
 
 ## 待办 / 候选方向
 
+- [x] 已提 PR：https://github.com/kelseyyang200/minipreview/pull/1（feat/memory-and-workspace 分支，剔除了自用转码功能后的精简版；等上游回应）
+
 - [ ] 多根工作区真机验证：添加 2+ 目录、重启浏览器逐目录授权、移除目录后最近打开仍可重开（自动化无法驱动原生目录对话框，待用户实测）
 - [ ] 用一段时间后按 `reference/upstream-bugs.md` 的拆分方案给上游提 PR
 - [ ] 最近打开支持置顶常用项目

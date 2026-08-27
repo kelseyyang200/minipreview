@@ -33,7 +33,9 @@
 | --- | --- | --- |
 | 1 | 一键转码（本机 Python+ffmpeg 助手 + 页面按钮 + 自助下载包） | 依赖用户自装本机助手服务，超出上游"零依赖轻量"定位 |
 
-## PR 策略（已执行）
+## PR 策略（已执行 ✅）
+
+**PR 地址：https://github.com/kelseyyang200/minipreview/pull/1**（fork：lyzbcy/minipreview，分支 feat/memory-and-workspace，2026-08-27 提交）
 
 **单个综合 PR**：包含 A 全部 + B 全部。从分支 `feat/memory-and-workspace` 提交到上游 `main`。
 
