@@ -738,6 +738,553 @@
             background: var(--border);
             margin: 4px 0;
         }
+
+        /* ===== 左侧边栏（工作目录 / 最近打开）===== */
+        .sidebar {
+            width: 264px;
+            min-width: 264px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow: hidden;
+            transition: width 0.25s ease, min-width 0.25s ease;
+        }
+
+        body.sidebar-collapsed .sidebar {
+            width: 0;
+            min-width: 0;
+            border-right: none;
+        }
+
+        .sidebar-inner {
+            width: 264px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px 8px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .sidebar-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .sidebar-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .sidebar-panel {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-panel.active {
+            display: flex;
+        }
+
+        .sidebar-actions {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-full-btn {
+            width: 100%;
+            justify-content: center;
+            font-size: 13px;
+            padding: 8px 10px;
+        }
+
+        .fs-unsupported {
+            display: none;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .workspace-dir-info {
+            padding: 0 12px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .workspace-dir-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .workspace-toolbar {
+            display: flex;
+            gap: 6px;
+        }
+
+        .workspace-toolbar input {
+            flex: 1;
+            min-width: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+
+        .workspace-toolbar input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .workspace-toolbar .control-btn {
+            width: 32px;
+            height: 32px;
+            flex: 0 0 32px;
+        }
+
+        .sidebar-file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 8px 12px;
+        }
+
+        .ws-file {
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            border: 1px solid transparent;
+            transition: background 0.15s;
+        }
+
+        .ws-file:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .ws-file.active {
+            background: var(--bg-tertiary);
+            border-color: var(--accent);
+        }
+
+        .ws-file-name {
+            font-size: 13px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ws-file.active .ws-file-name {
+            color: var(--accent);
+        }
+
+        .ws-file-path {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 多根工作区：目录分组 */
+        .ws-dir-group {
+            margin-bottom: 2px;
+        }
+
+        .ws-dir-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 7px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 12px;
+            user-select: none;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .ws-dir-header:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .ws-dir-caret {
+            flex: 0 0 14px;
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.15s;
+        }
+
+        .ws-dir-group.open .ws-dir-caret {
+            transform: rotate(90deg);
+        }
+
+        .ws-dir-title {
+            flex: 1;
+            min-width: 0;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ws-dir-actions {
+            display: flex;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .ws-mini-btn {
+            width: 22px;
+            height: 22px;
+            border: none;
+            background: none;
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 11px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: all 0.15s;
+        }
+
+        .ws-mini-btn:hover {
+            background: var(--bg-primary);
+            color: var(--accent);
+        }
+
+        .ws-mini-btn.danger:hover {
+            color: var(--warning);
+        }
+
+        .ws-dir-files {
+            display: none;
+            padding: 0 4px 4px 12px;
+        }
+
+        .ws-dir-group.open .ws-dir-files {
+            display: block;
+        }
+
+        .ws-dir-status {
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 6px 8px;
+            line-height: 1.6;
+        }
+
+        /* 会话恢复提示条（视频区顶部悬浮） */
+        .restore-bar {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-primary);
+            box-shadow: 0 4px 16px var(--shadow);
+            max-width: 90%;
+        }
+
+        .restore-bar-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 解码失败警告条（视频区顶部，黄框） */
+        .codec-warning {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 35;
+            background: var(--bg-secondary);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            box-shadow: 0 4px 16px var(--shadow);
+            max-width: 86%;
+        }
+
+        .codec-warning strong {
+            color: var(--warning);
+        }
+
+        .rc-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: background 0.15s;
+        }
+
+        .rc-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .rc-item.active {
+            background: var(--bg-tertiary);
+            border-color: var(--accent);
+        }
+
+        .rc-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rc-name {
+            font-size: 13px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rc-item.active .rc-name {
+            color: var(--accent);
+        }
+
+        .rc-warn {
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .rc-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rc-del {
+            flex: 0 0 22px;
+            width: 22px;
+            height: 22px;
+            background: none;
+            border: none;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .rc-del:hover {
+            color: var(--warning);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .sidebar-empty {
+            text-align: center;
+            padding: 32px 16px;
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .sidebar-empty-icon {
+            font-size: 28px;
+            opacity: 0.5;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            left: 264px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 56px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 40;
+            padding: 0;
+            transition: left 0.25s ease, color 0.2s;
+        }
+
+        .sidebar-toggle:hover {
+            color: var(--accent);
+        }
+
+        body.sidebar-collapsed .sidebar-toggle {
+            left: 0;
+        }
+
+        /* ===== 版本徽章 / 更新日志 / 一键刷新（工具栏内，不悬浮遮挡）===== */
+        .version-badge {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .vb-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .vb-main:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .vb-popover {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 300px;
+            max-height: 420px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            box-shadow: 0 8px 32px var(--shadow);
+            display: none;
+            cursor: default;
+            z-index: 100;
+        }
+
+        .vb-popover.open {
+            display: block;
+        }
+
+        .vb-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .vb-item {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .vb-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .vb-item-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .vb-item-version {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .vb-item-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .vb-item ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .vb-item li {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .vb-item li::before {
+            content: '·';
+            position: absolute;
+            left: 2px;
+            color: var(--text-muted);
+        }
+
+        .vb-refresh-btn {
+            width: 100%;
+            justify-content: center;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .vb-hint {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -750,28 +1297,82 @@
         <div class="video-url-input">
             <input type="text" id="videoUrlInput" placeholder="粘贴视频链接或选择本地文件..." onkeypress="handleUrlKeyPress(event)" />
             <button class="btn" onclick="loadVideoFromUrl()">加载</button>
-            <button class="btn" onclick="document.getElementById('fileInput').click()">本地文件</button>
+            <button class="btn" onclick="pickLocalFiles()">本地文件</button>
             <input type="file" id="fileInput" accept="video/*" multiple onchange="loadLocalFiles(event)" />
             <button class="btn" id="addVideoBtn" style="display: none;" onclick="document.getElementById('addFileInput').click()">➕ 添加视频</button>
             <input type="file" id="addFileInput" accept="video/*" multiple onchange="addMoreVideos(event)" style="display: none;" />
         </div>
         <div id="statusHint" style="font-size: 12px; color: var(--text-muted); margin-right: 12px;"></div>
         
-        <!-- 导出批注下拉菜单 -->
+        <!-- 导入/导出菜单 -->
         <div style="position: relative;">
-            <button class="btn" onclick="toggleExportMenu()">📋 导出批注 ▼</button>
-            <div id="exportMenu" style="display: none; position: absolute; top: 100%; right: 0; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; margin-top: 4px; min-width: 140px; z-index: 100;">
-                <button onclick="exportAsText()" style="width: 100%; padding: 10px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 14px;">📝 文本格式</button>
-                <div style="height: 1px; background: var(--border);"></div>
-                <button onclick="exportAsImage()" style="width: 100%; padding: 10px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 14px;">🖼️ 图片格式</button>
+            <button class="btn" onclick="toggleExportMenu()">📦 导入/导出 ▼</button>
+            <div id="exportMenu" style="display: none; position: absolute; top: 100%; right: 0; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; margin-top: 4px; min-width: 230px; z-index: 100;">
+                <div style="padding: 6px 16px 2px; font-size: 11px; color: var(--text-muted);">导出</div>
+                <button onclick="exportAsText()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">📝 文本格式</button>
+                <button onclick="exportAsImage()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">🖼️ 图片格式</button>
+                <button onclick="exportAnnotationsFile()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">💾 批注文件（很小的 JSON）</button>
+                <button onclick="superExport()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">📦 超级导出（批注 + 视频打包）</button>
+                <div style="height: 1px; background: var(--border); margin: 4px 0;"></div>
+                <div style="padding: 6px 16px 2px; font-size: 11px; color: var(--text-muted);">导入</div>
+                <button onclick="document.getElementById('importJsonInput').click()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">📂 批注文件导入</button>
+                <button onclick="document.getElementById('importZipInput').click()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">📦 超级导入（完整包还原）</button>
             </div>
         </div>
+        <input type="file" id="importJsonInput" accept=".json,application/json" onchange="importAnnotationsFile(event)" style="display: none;" />
+        <input type="file" id="importZipInput" accept=".zip,application/zip" onchange="superImport(event)" style="display: none;" />
         
         <button class="btn btn-primary" onclick="shareAnnotations()">📤 分享批注</button>
+        <button class="btn" onclick="hardRefresh()" title="强制刷新页面（绕过缓存，获取最新版本）">🔄 一键刷新</button>
+
+        <!-- 版本徽章 / 更新日志（工具栏内） -->
+        <div class="version-badge" id="versionBadge">
+            <button class="vb-main" onclick="toggleVersionPopover(event)" title="查看更新日志">🔔 <span id="versionBadgeText"></span></button>
+            <div class="vb-popover" id="versionPopover">
+                <div class="vb-title">📜 更新日志</div>
+                <div id="versionChangelog"></div>
+                <div class="vb-hint">静态页面常有缓存，请勤点旁边的「一键刷新」<br>打开页面时也会自动检测新版本</div>
+            </div>
+        </div>
     </div>
 
     <!-- 主容器 -->
     <div class="main-container">
+        <!-- 左侧边栏：工作目录 / 最近打开 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab active" id="tabBtn-workspace" onclick="switchSidebarTab('workspace')">📁 工作目录</button>
+                    <button class="sidebar-tab" id="tabBtn-recent" onclick="switchSidebarTab('recent')">🕘 最近打开</button>
+                </div>
+
+                <!-- 工作目录面板（多根工作区） -->
+                <div class="sidebar-panel active" id="sidebarPanel-workspace">
+                    <div class="sidebar-actions">
+                        <div class="fs-unsupported" id="fsUnsupportedHint">
+                            ⚠️ 当前浏览器不支持读取本地文件夹。<br>
+                            请使用 <b>Chrome / Edge</b>（86 以上版本）打开本页面，即可直接选择本地工作目录。
+                        </div>
+                        <button class="btn btn-primary sidebar-full-btn" id="pickDirBtn" onclick="pickWorkspaceDir()">📂 添加工作目录</button>
+                        <div class="workspace-toolbar" id="workspaceToolbar" style="display: none;">
+                            <input type="text" id="workspaceFilter" placeholder="筛选视频文件名…" oninput="renderWorkspaceList()">
+                            <button class="control-btn" title="重新扫描全部目录（往目录里丢了新文件后点这里）" onclick="scanWorkspace(true)">🔄</button>
+                        </div>
+                    </div>
+                    <div class="sidebar-file-list" id="workspaceFileList"></div>
+                </div>
+
+                <!-- 最近打开面板 -->
+                <div class="sidebar-panel" id="sidebarPanel-recent">
+                    <div class="sidebar-actions">
+                        <button class="btn sidebar-full-btn" onclick="clearRecents()">🗑️ 清空历史记录</button>
+                    </div>
+                    <div class="sidebar-file-list" id="recentList"></div>
+                </div>
+            </div>
+        </aside>
+        <button class="sidebar-toggle" id="sidebarToggle" title="收起 / 展开侧边栏" onclick="toggleSidebar()">«</button>
+
         <!-- 视频区域 -->
         <div class="video-section">
             <div class="video-wrapper" id="videoWrapper" ondblclick="handleDoubleClickUpload()">
@@ -780,6 +1381,21 @@
                     <p style="font-size: 16px; margin-bottom: 8px;">双击此处上传视频</p>
                     <p style="font-size: 12px; color: var(--text-muted);">或拖拽视频文件到这个区域</p>
                     <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">支持在线链接：粘贴到顶部输入框</p>
+                </div>
+                <!-- 会话恢复提示条（浏览器重启后权限失效时显示） -->
+                <div class="restore-bar" id="restoreBar" style="display: none;">
+                    <span class="restore-bar-text" id="restoreBarText"></span>
+                    <button class="btn btn-primary" id="restoreBarBtn" style="padding: 5px 12px; font-size: 12px;">🔄 恢复</button>
+                    <button class="rc-del" id="restoreBarClose" title="忽略">✕</button>
+                </div>
+                <!-- 解码失败警告（H.265 等浏览器解不出的编码） -->
+                <div class="codec-warning" id="codecWarning" style="display: none;">
+                    <strong>⚠️ 该视频在当前浏览器解不出画面</strong>（常见于 H.265/HEVC 编码的手机或相机素材，声音可能正常）
+                    <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="transcodeBtn" onclick="transcodeCurrentVideo()" style="padding: 5px 14px; font-size: 12px;">🔧 一键转码为 H.264</button>
+                        <span id="transcodeStatus" style="color: var(--text-secondary);">在本机转码，完成后自动加载</span>
+                    </div>
+                    <div style="margin-top: 6px; color: var(--text-muted);">其他办法：改用 Edge + 微软商店「HEVC 视频扩展」，或手动 ffmpeg：<code>ffmpeg -i 输入.mp4 -c:v libx264 -crf 18 -c:a copy 输出.mp4</code></div>
                 </div>
                 <video id="videoPlayer" style="display: none;" onclick="togglePlay()"></video>
             </div>
@@ -805,12 +1421,12 @@
 
             <!-- 控制栏 -->
             <div class="controls">
-                <button class="control-btn" onclick="skip(-5)" title="后退5秒">⏪</button>
+                <button class="control-btn" id="backBtn" onclick="skipByStep(-1)" title="后退 1秒">⏪</button>
                 <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()" title="播放/暂停">▶️</button>
-                <button class="control-btn" onclick="skip(5)" title="前进5秒">⏩</button>
-                
+                <button class="control-btn" id="fwdBtn" onclick="skipByStep(1)" title="前进 1秒">⏩</button>
+
                 <button class="control-btn" id="frameBtn" onclick="toggleFrameMode()" title="逐帧播放" style="margin-left: 20px;">🎞️</button>
-                
+
                 <div class="speed-control">
                     <span class="speed-label">速度:</span>
                     <div class="speed-btns">
@@ -823,6 +1439,15 @@
                     </div>
                 </div>
 
+                <!-- 左右键步长滑动条 -->
+                <div class="speed-control" style="margin-left: 16px;">
+                    <span class="speed-label">步长:</span>
+                    <input type="range" id="skipStepSlider" min="0" max="6" step="1" value="3" oninput="setSkipStep(this.value)"
+                        title="左右方向键 / ⏪⏩ 每次移动的幅度"
+                        style="width: 90px; accent-color: var(--accent); cursor: pointer;">
+                    <span class="speed-label" id="skipStepLabel" style="min-width: 36px; text-align: center; color: var(--text-primary); font-weight: 600;">1秒</span>
+                </div>
+
                 <button class="control-btn add-marker-btn" onclick="addMarkerAtCurrentTime()" title="添加标签 (M)">🏷️</button>
                 
                 <!-- 快捷键提示 -->
@@ -831,7 +1456,7 @@
                     <div><kbd>Enter</kbd> 完成</div>
                     <div><kbd>Space</kbd> 播放</div>
                     <div><kbd>F</kbd> 逐帧</div>
-                    <div><kbd>←</kbd><kbd>→</kbd> 前后</div>
+                    <div><kbd>←</kbd><kbd>→</kbd> 按步长</div>
                 </div>
             </div>
         </div>
@@ -901,6 +1526,153 @@
         let currentVideoIndex = 0; // 当前播放的视频索引
         let totalDuration = 0; // 总时长
         let frameMode = false; // 逐帧播放模式
+
+        // ===================== 版本管理 / 强制刷新 / 更新日志 =====================
+        // 部署规则：每次改完代码必须更新 APP_VERSION 和 CHANGELOG，再部署上线。
+        // 防无限刷新的四道防线：
+        //   1) sessionStorage 会话标记——同一会话最多自动强刷一次；
+        //   2) 强刷 URL 追加时间戳参数，必然绕过缓存拿到新版；
+        //   3) 远端版本号解析失败 / 网络失败时绝不刷新；
+        //   4) 只有远端版本号 ≠ 本地版本号才刷。
+        const APP_VERSION = '1.5.0';
+
+        const CHANGELOG = [
+            {
+                version: '1.5.0',
+                date: '2026-08-27',
+                items: [
+                    '新增一键转码：黑屏视频（H.265 等）可在页面直接点「🔧 一键转码为 H.264」，本机助手转完自动加载',
+                    '转码助手未安装时页面提供自助下载包（Python + ffmpeg，一次性配置）'
+                ]
+            },
+            {
+                version: '1.4.2',
+                date: '2026-08-27',
+                items: [
+                    '新增黑屏检测：视频解不出画面时（如 H.265/HEVC 素材）直接提示原因与转码解决办法'
+                ]
+            },
+            {
+                version: '1.4.1',
+                date: '2026-08-27',
+                items: [
+                    '新增左右键步长滑动条：1帧 ~ 10秒共 7 档（默认 1 秒，含 1帧/5帧 微调档），偏好自动记住'
+                ]
+            },
+            {
+                version: '1.4.0',
+                date: '2026-08-27',
+                items: [
+                    '新增普通导出/导入：批注保存为很小的 JSON 文件，可导入到对应项目',
+                    '新增超级导出：批注 + 原视频打包成一个 ZIP 完整包（链接类项目打包来源链接）',
+                    '新增超级导入：完整包一键还原播放列表、批注全部信息'
+                ]
+            },
+            {
+                version: '1.3.1',
+                date: '2026-08-27',
+                items: [
+                    '「一键刷新」升级为顶部工具栏一级按钮，点击即刷新，不再藏在更新日志里'
+                ]
+            },
+            {
+                version: '1.3.0',
+                date: '2026-08-27',
+                items: [
+                    '刷新 / 重开页面自动恢复上次现场：视频、批注、播放位置一键回到进度',
+                    '浏览器重启后权限失效时，显示「恢复」提示条，点一下即可回到上次项目',
+                    '批注保存加固：页面关闭 / 切走时强制落库，不再有防抖间隙丢失'
+                ]
+            },
+            {
+                version: '1.2.0',
+                date: '2026-08-27',
+                items: [
+                    '工作目录升级为多根工作区：可同时添加多个项目目录（像 VSCode 一样）',
+                    '目录分组可折叠，每组支持重扫、顺序加载全部、移除',
+                    '版本徽章移入顶部工具栏，不再遮挡页面按钮'
+                ]
+            },
+            {
+                version: '1.1.0',
+                date: '2026-08-27',
+                items: [
+                    '新增左侧边栏：选择本地工作目录，丢视频进去直接点开播放',
+                    '新增「最近打开」：自动记录项目，点击重开，批注自动恢复',
+                    '新增批注本地缓存：刷新 / 重启浏览器不再丢失批注',
+                    '新增版本检测 + 更新日志 + 一键刷新组件',
+                    '修复：删除本集崩溃、右键导出失效、输入框空格误触播放等 bug'
+                ]
+            },
+            {
+                version: '1.0.0',
+                date: '2026-08-26',
+                items: [
+                    '基于上游 kelseyyang200/minipreview 的基础版本'
+                ]
+            }
+        ];
+
+        // 一键刷新 / 强制刷新：带时间戳参数绕过缓存，保留分享链接参数和锚点
+        function hardRefresh() {
+            const params = new URLSearchParams(location.search);
+            params.set('_fr', Date.now() + '');
+            location.replace(location.origin + location.pathname + '?' + params.toString() + location.hash);
+        }
+
+        // 打开页面时自动核对远端版本号，不一致强刷一次
+        async function initVersionGuard() {
+            // 防线 1：本会话已强刷过，绝不再自动刷
+            if (sessionStorage.getItem('mp:forceRefreshed')) return;
+            try {
+                // 防线 4：no-store + 时间戳，拿"真·最新"HTML 对比版本号
+                const sep = location.search ? '&' : '?';
+                const res = await fetch(location.origin + location.pathname + location.search + sep + '_v=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) return;
+                const html = await res.text();
+                const m = html.match(/const\s+APP_VERSION\s*=\s*'([^']+)'/);
+                if (!m) return; // 防线 3：解析不到版本号就不动
+                if (m[1] !== APP_VERSION) {
+                    sessionStorage.setItem('mp:forceRefreshed', Date.now() + '');
+                    // 防线 2：带时间戳参数刷新，必然拿到新页面
+                    hardRefresh();
+                }
+            } catch (e) {
+                // 防线 3：网络失败不刷新
+                console.warn('版本检测失败（不影响使用）：', e);
+            }
+        }
+
+        // 渲染版本徽章与更新日志
+        function renderVersionBadge() {
+            const latest = CHANGELOG[0];
+            const dateShort = latest.date.slice(5).replace('-', '/');
+            document.getElementById('versionBadgeText').textContent = `v${latest.version} · ${dateShort}`;
+            document.getElementById('versionChangelog').innerHTML = CHANGELOG.map(entry => `
+                <div class="vb-item">
+                    <div class="vb-item-head">
+                        <span class="vb-item-version">v${entry.version}</span>
+                        <span class="vb-item-date">${entry.date}</span>
+                    </div>
+                    <ul>${entry.items.map(t => `<li>${t}</li>`).join('')}</ul>
+                </div>
+            `).join('');
+        }
+
+        // 展开 / 收起更新日志
+        function toggleVersionPopover(event) {
+            event.stopPropagation();
+            document.getElementById('versionPopover').classList.toggle('open');
+        }
+
+        // 点击其他地方收起更新日志
+        document.addEventListener('click', (e) => {
+            const badge = document.getElementById('versionBadge');
+            const popover = document.getElementById('versionPopover');
+            if (popover && badge && !badge.contains(e.target)) {
+                popover.classList.remove('open');
+            }
+        });
         
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
@@ -912,8 +1684,11 @@
             
             // 视频事件监听
             video.addEventListener('timeupdate', updateTimeline);
+            video.addEventListener('timeupdate', schedulePosSave);
             video.addEventListener('loadedmetadata', () => {
                 document.getElementById('totalTime').textContent = formatTime(video.duration);
+                renderAnnotations(); // 元数据就绪后重画批注标记（恢复的批注需要 duration 计算位置）
+                checkDecodability(); // 黑屏检测：有流但解不出画面（如 H.265）
             });
             video.addEventListener('play', () => {
                 document.getElementById('playBtn').textContent = '⏸️';
@@ -927,6 +1702,30 @@
             
             // 设置拖拽上传
             setupDragAndDrop();
+
+            // 页面关闭 / 切走时：批注与播放位置强制落库
+            window.addEventListener('beforeunload', () => {
+                flushAnnotationSave();
+                savePosNow();
+            });
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'hidden') {
+                    flushAnnotationSave();
+                    savePosNow();
+                }
+            });
+
+            // 初始化侧边栏（工作目录 / 最近打开 / 本地缓存）
+            initSidebarApp();
+
+            // 恢复左右键步长偏好
+            const savedSkipStep = parseInt(localStorage.getItem('mp:skipStep'));
+            if (!isNaN(savedSkipStep)) document.getElementById('skipStepSlider').value = savedSkipStep;
+            setSkipStep(document.getElementById('skipStepSlider').value);
+
+            // 版本检测 + 更新日志渲染
+            renderVersionBadge();
+            initVersionGuard();
         });
         
         // 播放下一个视频
@@ -1033,6 +1832,16 @@
             }
             
             loadVideo(url);
+
+            // 记录到"最近打开"，并恢复该项目上次保存的批注
+            openProjectRecord({ id: 'url:' + url, type: 'url', name: urlName(url), url: url, videoCount: 1 })
+                .then(() => {
+                    // 会话恢复时跳回上次播放位置
+                    if (pendingSeekRestore) {
+                        pendingSeekRestore = false;
+                        restorePlaybackPos();
+                    }
+                });
         }
         
         // 启用微盘模式
@@ -1072,6 +1881,9 @@
                 </div>
             `;
             document.getElementById('uploadHint').style.display = 'flex';
+
+            // 记录到"最近打开"，并恢复该项目上次保存的批注
+            openProjectRecord({ id: 'wedrive:' + wedriveUrl, type: 'wedrive', name: '微盘：' + urlName(wedriveUrl), url: wedriveUrl, videoCount: 1 });
         }
         
         // 处理微盘加载失败
@@ -1135,7 +1947,15 @@
             video.src = url;
             video.style.display = 'block';
             document.getElementById('uploadHint').style.display = 'none';
-            
+
+            // 离开微盘模式：隐藏微盘批注输入区并清除微盘状态
+            window.currentWeDriveUrl = null;
+            const manualSection = document.getElementById('manualAddSection');
+            if (manualSection) {
+                manualSection.style.display = 'none';
+                manualSection.innerHTML = '';
+            }
+
             video.onerror = function() {
                 alert('❌ 视频加载失败：\n\n可能的原因：\n1. 链接不是有效的视频文件\n2. 视频格式不支持\n3. 需要登录才能访问');
                 document.getElementById('statusHint').innerHTML = '❌ 加载失败';
@@ -1150,18 +1970,38 @@
             };
         }
 
-        // 加载本地文件
-        // 加载多个本地文件
+        // 加载本地文件（<input> 兼容入口）
         async function loadLocalFiles(event) {
-            const files = Array.from(event.target.files);
+            await loadVideoFiles(Array.from(event.target.files));
+        }
+
+        // 「本地文件」按钮：优先使用文件句柄（可记忆、可重开），不支持时退回 <input>
+        async function pickLocalFiles() {
+            if (typeof window.showOpenFilePicker === 'function') {
+                try {
+                    const handles = await window.showOpenFilePicker({ multiple: true });
+                    const files = [];
+                    for (const h of handles) files.push(await h.getFile());
+                    if (files.length) await loadVideoFiles(files, { handles });
+                    return;
+                } catch (e) {
+                    if (e && e.name === 'AbortError') return;
+                    console.warn('showOpenFilePicker 失败，改用传统方式：', e);
+                }
+            }
+            document.getElementById('fileInput').click();
+        }
+
+        // 统一加载入口：文件选择 / 工作目录 / 最近打开 都走这里
+        async function loadVideoFiles(files, opts = {}) {
+            files = Array.from(files);
             if (files.length === 0) return;
-            
+
             // 按文件名排序（识别集数）
-            files.sort((a, b) => {
-                const numA = parseInt(a.name.match(/\d+/) || [0]);
-                const numB = parseInt(b.name.match(/\d+/) || [0]);
-                return numA - numB;
-            });
+            if (!opts.preserveOrder) files = sortVideoFiles(files);
+
+            // 记录到"最近打开"，并恢复该项目上次保存的批注
+            await openProjectRecord(opts.project || buildFilesProject(files, opts.handles || []));
             
             // 清空之前的视频
             videos = [];
@@ -1199,6 +2039,13 @@
                 document.getElementById('addVideoBtn').style.display = 'inline-block';
                 document.getElementById('statusHint').innerHTML = `📁 ${videos.length} 个视频`;
                 document.getElementById('statusHint').style.color = 'var(--accent)';
+                renderAnnotations();
+                renderWorkspaceList();
+                // 会话恢复时跳回上次播放位置
+                if (pendingSeekRestore) {
+                    pendingSeekRestore = false;
+                    restorePlaybackPos();
+                }
             }
         }
         
@@ -1393,13 +2240,13 @@
                 
                 const files = e.dataTransfer.files;
                 if (files.length > 0 && files[0].type.startsWith('video/')) {
-                    handleVideoUpload(files[0]);
+                    handleDropUpload(e.dataTransfer, files[0]);
                 }
             });
         }
         
         // 处理视频上传
-        function handleVideoUpload(file) {
+        async function handleVideoUpload(file, fileHandle) {
             const url = URL.createObjectURL(file);
             video.src = url;
             video.style.display = 'block';
@@ -1408,6 +2255,10 @@
             
             // 显示状态提示
             document.getElementById('statusHint').innerHTML = '⚠️ 本地文件不可分享 | <a href="#" onclick="showUploadGuide()" style="color: var(--accent);">如何获取在线链接？</a>';
+
+            // 记录到"最近打开"，并恢复该项目上次保存的批注
+            await openProjectRecord(buildFilesProject([file], fileHandle ? [fileHandle] : []));
+            renderWorkspaceList();
         }
         
         // 显示上传引导
@@ -1424,9 +2275,52 @@
             }
         }
 
+        // 跳转步长档位（左右方向键 / ⏪⏩ 共用）
+        const SKIP_STEPS = [
+            { label: '1帧', seconds: 1 / 25 },
+            { label: '5帧', seconds: 5 / 25 },
+            { label: '0.5秒', seconds: 0.5 },
+            { label: '1秒', seconds: 1 },
+            { label: '2秒', seconds: 2 },
+            { label: '5秒', seconds: 5 },
+            { label: '10秒', seconds: 10 }
+        ];
+        let skipStepIndex = 3; // 默认 1 秒
+
+        function setSkipStep(idx) {
+            skipStepIndex = Math.max(0, Math.min(SKIP_STEPS.length - 1, Number(idx)));
+            const step = SKIP_STEPS[skipStepIndex];
+            document.getElementById('skipStepLabel').textContent = step.label;
+            document.getElementById('backBtn').title = `后退 ${step.label}（←）`;
+            document.getElementById('fwdBtn').title = `前进 ${step.label}（→）`;
+            localStorage.setItem('mp:skipStep', skipStepIndex);
+        }
+
+        function currentSkipSeconds() {
+            return SKIP_STEPS[skipStepIndex].seconds;
+        }
+
+        // 按当前步长跳转（dir = -1 后退 / 1 前进）
+        function skipByStep(dir) {
+            skip(dir * currentSkipSeconds());
+        }
+
         // 跳转
         function skip(seconds) {
             video.currentTime += seconds;
+        }
+
+        // 黑屏检测：容器/时长正常但解不出画面（videoWidth=0），典型如 H.265/HEVC
+        function checkDecodability() {
+            const warning = document.getElementById('codecWarning');
+            if (!warning) return;
+            if (video.readyState >= 1 && video.videoWidth === 0 && video.videoHeight === 0) {
+                warning.style.display = 'block';
+                document.getElementById('statusHint').innerHTML = '⚠️ 无法解码画面（H.265？）';
+                document.getElementById('statusHint').style.color = 'var(--warning)';
+            } else {
+                warning.style.display = 'none';
+            }
         }
         
         // 切换逐帧模式
@@ -1507,7 +2401,7 @@
             }
             
             const v = videos[currentVideoIndex];
-            const list = annotations[v.name] || [];
+            const list = annotations.filter(a => a.videoName === v.name);
             
             if (list.length === 0) {
                 alert('当前视频没有批注');
@@ -1542,7 +2436,7 @@
                 });
                 
                 currentVideoIndex = Math.min(currentVideoIndex, videos.length - 1);
-                loadVideo(currentVideoIndex);
+                loadVideoByIndex(currentVideoIndex);
                 renderAnnotations();
             } else {
                 // 没有视频了
@@ -1555,7 +2449,7 @@
                 renderAnnotations();
             }
             
-            updateEpisodeList();
+            // （原 updateEpisodeList() 调用已移除——该函数并不存在，会导致 ReferenceError）
         }
 
         // 点击其他地方隐藏菜单
@@ -1778,6 +2672,9 @@
             
             // 更新计数
             document.getElementById('markerCount').textContent = `${annotations.length} 个标签`;
+
+            // 批注有变化时，自动保存到本地缓存（IndexedDB）
+            scheduleAnnotationSave();
         }
 
         // 跳转到批注
@@ -1853,8 +2750,8 @@
 
         // 键盘快捷键
         function handleKeyboard(event) {
-            // 如果正在编辑，不处理快捷键
-            if (editingId !== null && event.target.tagName === 'TEXTAREA') {
+            // 正在输入框 / 编辑批注时，不处理快捷键
+            if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) {
                 return;
             }
             
@@ -1865,11 +2762,11 @@
                     break;
                 case 'ArrowLeft':
                     event.preventDefault();
-                    skip(-5);
+                    skip(-currentSkipSeconds());
                     break;
                 case 'ArrowRight':
                     event.preventDefault();
-                    skip(5);
+                    skip(currentSkipSeconds());
                     break;
                 case 'KeyM':
                     event.preventDefault();
@@ -2308,6 +3205,1430 @@
             link.download = `${videoName}_批注.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
+        }
+
+        // ===================== 侧边栏：工作目录 / 最近打开 / 本地缓存 =====================
+        // 说明：
+        // - 目录与文件句柄用 File System Access API 获取，可序列化保存到 IndexedDB，
+        //   刷新 / 重启浏览器后仍能恢复（首次需要重新授权一次）。
+        // - 批注按"项目"自动保存到 IndexedDB，重新打开同一项目时自动恢复。
+
+        const VIDEO_EXTS = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v', '.flv', '.ts'];
+        const DB_NAME = 'minipreview-db';
+        const DB_STORE = 'projects';
+        let sideDb = null;
+        let currentProject = null;      // 当前打开的项目记录（含 id）
+        let workspaceDirs = [];        // 多根工作区：[{id, name, handle, perm, files, collapsed}]
+        let annotationSaveTimer = null;
+
+        function supportsFsApi() {
+            return typeof window.showDirectoryPicker === 'function';
+        }
+
+        function isVideoFilename(name) {
+            const n = name.toLowerCase();
+            return VIDEO_EXTS.some(ext => n.endsWith(ext));
+        }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+                { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+            ));
+        }
+
+        function stripExt(name) {
+            return name.replace(/\.[^/.]+$/, '');
+        }
+
+        function urlName(url) {
+            try {
+                const u = new URL(url, location.href);
+                const seg = u.pathname.split('/').filter(Boolean).pop();
+                return seg ? decodeURIComponent(seg) : u.hostname;
+            } catch (e) {
+                return url;
+            }
+        }
+
+        // 相对时间标签（最近打开用）
+        function relTimeLabel(ts) {
+            const diff = Date.now() - ts;
+            const m = Math.floor(diff / 60000);
+            if (m < 1) return '刚刚';
+            if (m < 60) return `${m} 分钟前`;
+            const h = Math.floor(m / 60);
+            if (h < 24) return `${h} 小时前`;
+            const d = Math.floor(h / 24);
+            if (d < 7) return `${d} 天前`;
+            return new Date(ts).toLocaleDateString('zh-CN');
+        }
+
+        // 多文件按文件名中的数字排序（与原逻辑一致）
+        function sortVideoFiles(files) {
+            return Array.from(files).sort((a, b) => {
+                const numA = parseInt(a.name.match(/\d+/) || [0]);
+                const numB = parseInt(b.name.match(/\d+/) || [0]);
+                if (numA !== numB) return numA - numB;
+                return a.name.localeCompare(b.name, 'zh-Hans-CN', { numeric: true });
+            });
+        }
+
+        // 工作目录文件按相对路径自然排序
+        function videoFileCompare(a, b) {
+            const numA = parseInt(a.name.match(/\d+/) || [0]);
+            const numB = parseInt(b.name.match(/\d+/) || [0]);
+            if (numA !== numB) return numA - numB;
+            return a.relPath.localeCompare(b.relPath, 'zh-Hans-CN', { numeric: true });
+        }
+
+        // ---------- IndexedDB 封装 ----------
+        function openDb() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(DB_NAME, 1);
+                req.onupgradeneeded = () => {
+                    req.result.createObjectStore(DB_STORE, { keyPath: 'id' });
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        function dbPut(record) {
+            const put = (rec) => new Promise((resolve, reject) => {
+                const req = sideDb.transaction(DB_STORE, 'readwrite').objectStore(DB_STORE).put(rec);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+            return put(record).catch(err => {
+                // 句柄无法结构化克隆时，降级为不带句柄存储（最近打开里仍可见，但不能一键重开）
+                if (record.fileHandles || record.handle) {
+                    const clone = Object.assign({}, record);
+                    delete clone.fileHandles;
+                    delete clone.handle;
+                    return put(clone);
+                }
+                throw err;
+            });
+        }
+
+        function dbGet(id) {
+            return new Promise((resolve) => {
+                const req = sideDb.transaction(DB_STORE, 'readonly').objectStore(DB_STORE).get(id);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => resolve(null);
+            });
+        }
+
+        function dbDelete(id) {
+            return new Promise((resolve) => {
+                const req = sideDb.transaction(DB_STORE, 'readwrite').objectStore(DB_STORE).delete(id);
+                req.onsuccess = () => resolve();
+                req.onerror = () => resolve();
+            });
+        }
+
+        function dbAll() {
+            return new Promise((resolve) => {
+                const req = sideDb.transaction(DB_STORE, 'readonly').objectStore(DB_STORE).getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => resolve([]);
+            });
+        }
+
+        // ---------- 项目记录（最近打开 + 批注缓存）----------
+        async function openProjectRecord(rec) {
+            let existing = null;
+            if (sideDb) existing = await dbGet(rec.id);
+
+            const merged = Object.assign({}, existing || {}, rec, { lastOpened: Date.now() });
+            // 不让空句柄列表覆盖已保存的句柄
+            if (existing && existing.fileHandles && existing.fileHandles.length &&
+                (!merged.fileHandles || !merged.fileHandles.length)) {
+                merged.fileHandles = existing.fileHandles;
+            }
+            merged.annotationCount = existing && Array.isArray(existing.annotations) ? existing.annotations.length : 0;
+
+            if (sideDb) {
+                try { await dbPut(merged); } catch (e) { console.warn('项目记录保存失败：', e); }
+            }
+
+            currentProject = merged;
+            // 记住"上次的项目"，刷新页面时自动恢复现场
+            localStorage.setItem('mp:lastProjectId', rec.id);
+            // 恢复该项目上次保存的批注
+            annotations = existing && Array.isArray(existing.annotations) ? existing.annotations.slice() : [];
+            renderAnnotations();
+            renderRecentList();
+        }
+
+        function buildFilesProject(files, handles) {
+            const names = files.map(f => f.name).sort();
+            const id = 'files:' + names.join('|');
+            const displayName = files.length === 1
+                ? stripExt(files[0].name)
+                : `${stripExt(sortVideoFiles(files)[0].name)} 等 ${files.length} 个视频`;
+            return { id: id, type: 'files', name: displayName, videoCount: files.length, fileHandles: handles || [] };
+        }
+
+        // 批注立即落库
+        async function saveAnnotationsNow() {
+            if (!currentProject || !sideDb) return;
+            try {
+                const rec = await dbGet(currentProject.id);
+                if (!rec) return;
+                rec.annotations = annotations.slice();
+                rec.annotationCount = annotations.length;
+                await dbPut(rec);
+                renderRecentList();
+            } catch (e) {
+                console.warn('批注自动保存失败：', e);
+            }
+        }
+
+        // 批注自动保存（防抖 500ms）
+        function scheduleAnnotationSave() {
+            if (!currentProject || !sideDb) return;
+            clearTimeout(annotationSaveTimer);
+            annotationSaveTimer = setTimeout(saveAnnotationsNow, 500);
+        }
+
+        // 页面关闭 / 切走时强制把批注落库（防抖间隙刷新丢批注）
+        function flushAnnotationSave() {
+            if (annotationSaveTimer) {
+                clearTimeout(annotationSaveTimer);
+                annotationSaveTimer = null;
+                saveAnnotationsNow();
+            }
+        }
+
+        // ---------- 播放位置记忆 ----------
+        let posSaveTimer = null;
+        // 自动恢复会话时置 true：加载完成后跳回上次播放位置（用户日常点开则从头播）
+        let pendingSeekRestore = false;
+
+        function schedulePosSave() {
+            if (!currentProject) return;
+            clearTimeout(posSaveTimer);
+            posSaveTimer = setTimeout(() => {
+                try {
+                    localStorage.setItem('mp:pos:' + currentProject.id,
+                        JSON.stringify({ videoIndex: currentVideoIndex, time: video.currentTime }));
+                } catch (e) { /* 忽略 */ }
+            }, 2000);
+        }
+
+        function savePosNow() {
+            if (!currentProject) return;
+            clearTimeout(posSaveTimer);
+            try {
+                localStorage.setItem('mp:pos:' + currentProject.id,
+                    JSON.stringify({ videoIndex: currentVideoIndex, time: video.currentTime }));
+            } catch (e) { /* 忽略 */ }
+        }
+
+        // 跳回当前项目上次的播放位置
+        function restorePlaybackPos() {
+            if (!currentProject) return;
+            let pos = null;
+            try { pos = JSON.parse(localStorage.getItem('mp:pos:' + currentProject.id) || 'null'); } catch (e) {}
+            if (!pos) return;
+            if (videos.length > 0) {
+                const idx = Math.min(pos.videoIndex || 0, videos.length - 1);
+                loadVideoByIndex(idx);
+                video.addEventListener('loadedmetadata', () => {
+                    try { video.currentTime = pos.time || 0; } catch (e) {}
+                }, { once: true });
+            } else if (pos.time) {
+                video.addEventListener('loadedmetadata', () => {
+                    try { video.currentTime = pos.time; } catch (e) {}
+                }, { once: true });
+            }
+        }
+
+        // ---------- 会话恢复：刷新 / 重开后回到上次现场 ----------
+        function showRestoreBar(rec) {
+            const bar = document.getElementById('restoreBar');
+            document.getElementById('restoreBarText').textContent = `检测到上次的项目「${rec.name}」，批注已保存`;
+            document.getElementById('restoreBarBtn').onclick = async () => {
+                bar.style.display = 'none';
+                pendingSeekRestore = true;
+                await openRecentProject(rec.id);
+            };
+            document.getElementById('restoreBarClose').onclick = () => {
+                bar.style.display = 'none';
+            };
+            bar.style.display = 'flex';
+        }
+
+        // 判断能否免打扰地自动恢复（无需权限弹窗）
+        async function canAutoRestore(rec) {
+            if (rec.type === 'url' || rec.type === 'wedrive') return true;
+            if (rec.type === 'dirfile' || rec.type === 'dirall') {
+                const dirRec = await dbGet(rec.dirId);
+                if (!dirRec || !dirRec.handle) return false;
+                try { return await dirRec.handle.queryPermission({ mode: 'read' }) === 'granted'; } catch (e) { return false; }
+            }
+            if (rec.type === 'files' && rec.fileHandles && rec.fileHandles.length) {
+                try {
+                    for (const h of rec.fileHandles) {
+                        if (await h.queryPermission({ mode: 'read' }) !== 'granted') return false;
+                    }
+                    return true;
+                } catch (e) { return false; }
+            }
+            return false;
+        }
+
+        async function restoreLastSession() {
+            // 分享链接模式不抢现场
+            if (new URLSearchParams(location.search).get('data')) return;
+            const id = localStorage.getItem('mp:lastProjectId');
+            if (!id || !sideDb) return;
+            const rec = await dbGet(id);
+            if (!rec) return;
+            try {
+                if (await canAutoRestore(rec)) {
+                    pendingSeekRestore = true;
+                    await openRecentProject(id);
+                } else {
+                    showRestoreBar(rec);
+                }
+            } catch (e) {
+                console.warn('会话恢复失败：', e);
+            }
+        }
+
+        // ---------- 文件句柄权限 ----------
+        async function ensureReadPermission(handle) {
+            try {
+                if (await handle.queryPermission({ mode: 'read' }) === 'granted') return true;
+            } catch (e) {
+                return false;
+            }
+            try {
+                return await handle.requestPermission({ mode: 'read' }) === 'granted';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 按相对路径（可含子目录）取文件
+        async function getFileByPath(dirHandle, relPath) {
+            const parts = relPath.split('/').filter(Boolean);
+            let dir = dirHandle;
+            for (let i = 0; i < parts.length - 1; i++) {
+                dir = await dir.getDirectoryHandle(parts[i]);
+            }
+            const fh = await dir.getFileHandle(parts[parts.length - 1]);
+            return fh.getFile();
+        }
+
+        // ---------- 工作目录（多根工作区）----------
+        function saveWorkspaceDirIds() {
+            localStorage.setItem('mp:workspaceDirs', JSON.stringify(workspaceDirs.map(d => d.id)));
+        }
+
+        async function pickWorkspaceDir() {
+            if (!supportsFsApi()) {
+                alert('当前浏览器不支持直接读取本地文件夹。\n\n请使用 Chrome 或 Edge（86 以上版本）打开本页面。\n（Firefox / Safari 暂不支持 File System Access API）');
+                return;
+            }
+            try {
+                const handle = await window.showDirectoryPicker({ mode: 'read' });
+                // 同一目录重复添加时提示并跳过（isSameEntry 判断真实路径）
+                for (const d of workspaceDirs) {
+                    try {
+                        if (d.handle && await d.handle.isSameEntry(handle)) {
+                            alert(`目录「${handle.name}」已经在工作区里了。`);
+                            return;
+                        }
+                    } catch (e) { /* 忽略比较失败，继续 */ }
+                }
+                const id = 'dir:' + handle.name + ':' + Date.now();
+                if (sideDb) {
+                    try { await dbPut({ id: id, type: 'dir', name: handle.name, handle: handle, pickedAt: Date.now() }); } catch (e) { /* 降级存储 */ }
+                }
+                workspaceDirs.push({ id: id, name: handle.name, handle: handle, perm: 'granted', files: [], collapsed: false });
+                saveWorkspaceDirIds();
+                await scanOneDir(workspaceDirs[workspaceDirs.length - 1]);
+            } catch (e) {
+                if (e && e.name !== 'AbortError') console.error('选择工作目录失败：', e);
+            }
+            updateWorkspaceUI();
+        }
+
+        // 启动时恢复工作区目录列表（兼容旧版单目录 key）
+        async function restoreWorkspaceDirs() {
+            let ids = [];
+            try {
+                ids = JSON.parse(localStorage.getItem('mp:workspaceDirs') || '[]');
+            } catch (e) { ids = []; }
+            // 旧版（单目录）迁移：mp:workspaceDirId → 数组
+            if (!ids.length) {
+                const legacy = localStorage.getItem('mp:workspaceDirId');
+                if (legacy) {
+                    ids = [legacy];
+                    localStorage.setItem('mp:workspaceDirs', JSON.stringify(ids));
+                    localStorage.removeItem('mp:workspaceDirId');
+                }
+            }
+            const collapsedIds = getCollapsedDirIds();
+            for (const id of ids) {
+                const rec = sideDb ? await dbGet(id) : null;
+                if (!rec || !rec.handle) continue;
+                let perm = 'prompt';
+                try {
+                    perm = await rec.handle.queryPermission({ mode: 'read' });
+                } catch (e) { perm = 'prompt'; }
+                workspaceDirs.push({
+                    id: id,
+                    name: rec.name || '目录',
+                    handle: rec.handle,
+                    perm: perm,
+                    files: [],
+                    collapsed: collapsedIds.includes(id)
+                });
+                if (perm === 'granted') await scanOneDir(workspaceDirs[workspaceDirs.length - 1]);
+            }
+            updateWorkspaceUI();
+        }
+
+        function getCollapsedDirIds() {
+            try {
+                return JSON.parse(localStorage.getItem('mp:wsDirCollapsed') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveCollapsedDirIds() {
+            localStorage.setItem('mp:wsDirCollapsed', JSON.stringify(workspaceDirs.filter(d => d.collapsed).map(d => d.id)));
+        }
+
+        // 单个目录重新授权（浏览器重启后需要一次手势授权）
+        async function regrantWorkspaceDir(dirId) {
+            const dir = workspaceDirs.find(d => d.id === dirId);
+            if (!dir) return;
+            const granted = await ensureReadPermission(dir.handle);
+            dir.perm = granted ? 'granted' : 'prompt';
+            if (granted) await scanOneDir(dir);
+            updateWorkspaceUI();
+        }
+
+        // 从工作区移除目录（IndexedDB 里的记录保留，最近打开仍可重开）
+        async function removeWorkspaceDir(dirId) {
+            workspaceDirs = workspaceDirs.filter(d => d.id !== dirId);
+            saveWorkspaceDirIds();
+            saveCollapsedDirIds();
+            updateWorkspaceUI();
+        }
+
+        // 折叠 / 展开 目录分组
+        function toggleDirCollapsed(dirId) {
+            const dir = workspaceDirs.find(d => d.id === dirId);
+            if (!dir) return;
+            dir.collapsed = !dir.collapsed;
+            saveCollapsedDirIds();
+            renderWorkspaceList();
+        }
+
+        // 递归扫描目录（最多 4 层、800 个文件）
+        async function scanDirRecursive(dirHandle, prefix, depth, out) {
+            if (depth > 4 || out.length >= 800) return;
+            for await (const entry of dirHandle.values()) {
+                if (out.length >= 800) break;
+                if (entry.kind === 'directory') {
+                    if (entry.name.startsWith('.')) continue;
+                    await scanDirRecursive(entry, prefix + entry.name + '/', depth + 1, out);
+                } else if (entry.kind === 'file' && isVideoFilename(entry.name)) {
+                    out.push({ name: entry.name, relPath: prefix + entry.name, handle: entry });
+                }
+            }
+        }
+
+        // 扫描单个目录
+        async function scanOneDir(dir) {
+            if (!dir || !dir.handle || dir.perm !== 'granted') return;
+            const out = [];
+            try {
+                await scanDirRecursive(dir.handle, '', 0, out);
+            } catch (e) {
+                console.error('扫描工作目录失败：', dir.name, e);
+            }
+            out.sort(videoFileCompare);
+            out.forEach(f => { f.dirId = dir.id; f.dirName = dir.name; });
+            dir.files = out;
+        }
+
+        // 重新扫描全部已授权目录
+        async function scanWorkspace() {
+            for (const dir of workspaceDirs) {
+                await scanOneDir(dir);
+            }
+            renderWorkspaceList();
+            updateWorkspaceUI();
+        }
+
+        function updateWorkspaceUI() {
+            const pickBtn = document.getElementById('pickDirBtn');
+            const toolbar = document.getElementById('workspaceToolbar');
+            const unsupported = document.getElementById('fsUnsupportedHint');
+            const listEl = document.getElementById('workspaceFileList');
+
+            if (!supportsFsApi()) {
+                unsupported.style.display = 'block';
+                pickBtn.style.display = 'none';
+                toolbar.style.display = 'none';
+                listEl.innerHTML = sidebarEmptyHint('目录功能需要 Chrome / Edge 浏览器');
+                return;
+            }
+            unsupported.style.display = 'none';
+            pickBtn.style.display = '';
+
+            if (!workspaceDirs.length) {
+                toolbar.style.display = 'none';
+                listEl.innerHTML = sidebarEmptyHint('添加一个或多个文件夹作为工作区<br>像 VSCode 一样把几个项目目录都挂上来<br>往里面丢视频，就能直接在这里点开');
+                return;
+            }
+            toolbar.style.display = '';
+            renderWorkspaceList();
+        }
+
+        function sidebarEmptyHint(text) {
+            return `<div class="sidebar-empty"><div class="sidebar-empty-icon">🗂️</div><p>${text}</p></div>`;
+        }
+
+        function renderWorkspaceList() {
+            const listEl = document.getElementById('workspaceFileList');
+            if (!listEl || !workspaceDirs.length) return;
+
+            const filter = (document.getElementById('workspaceFilter').value || '').trim().toLowerCase();
+            listEl.innerHTML = '';
+
+            let totalMatch = 0;
+            workspaceDirs.forEach(dir => {
+                const group = document.createElement('div');
+
+                if (dir.perm !== 'granted') {
+                    // 待授权目录
+                    group.className = 'ws-dir-group';
+                    group.innerHTML = `
+                        <div class="ws-dir-header" title="${escapeHtml(dir.name)}">
+                            <span class="ws-dir-caret">▸</span>
+                            <span class="ws-dir-title">🔓 ${escapeHtml(dir.name)}</span>
+                            <span class="ws-dir-actions">
+                                <button class="ws-mini-btn" title="重新授权访问" onclick="event.stopPropagation(); regrantWorkspaceDir('${dir.id}')">🔐</button>
+                                <button class="ws-mini-btn danger" title="从工作区移除" onclick="event.stopPropagation(); removeWorkspaceDir('${dir.id}')">×</button>
+                            </span>
+                        </div>
+                        <div class="ws-dir-files"><div class="ws-dir-status">浏览器重启后需重新授权一次</div></div>`;
+                    listEl.appendChild(group);
+                    return;
+                }
+
+                const files = filter
+                    ? dir.files.filter(e => e.relPath.toLowerCase().includes(filter))
+                    : dir.files;
+                if (filter && !files.length) return; // 筛选时跳过无匹配的目录
+                totalMatch += files.length;
+
+                group.className = 'ws-dir-group' + (!filter && dir.collapsed ? '' : ' open');
+                const header = document.createElement('div');
+                header.className = 'ws-dir-header';
+                header.title = dir.name;
+                header.innerHTML = `
+                    <span class="ws-dir-caret">▸</span>
+                    <span class="ws-dir-title">📁 ${escapeHtml(dir.name)}（${dir.files.length}）</span>
+                    <span class="ws-dir-actions">
+                        <button class="ws-mini-btn" title="重新扫描此目录" onclick="event.stopPropagation(); rescanOneDir('${dir.id}')">🔄</button>
+                        <button class="ws-mini-btn" title="顺序加载本目录全部视频" onclick="event.stopPropagation(); loadAllWorkspace('${dir.id}')">▶</button>
+                        <button class="ws-mini-btn danger" title="从工作区移除（不影响最近打开记录）" onclick="event.stopPropagation(); removeWorkspaceDir('${dir.id}')">×</button>
+                    </span>`;
+                header.addEventListener('click', () => toggleDirCollapsed(dir.id));
+                group.appendChild(header);
+
+                const filesDiv = document.createElement('div');
+                filesDiv.className = 'ws-dir-files';
+                if (!files.length) {
+                    filesDiv.innerHTML = `<div class="ws-dir-status">${filter ? '没有匹配的视频' : '未扫到视频文件，丢几个进来后点 🔄'}</div>`;
+                } else {
+                    files.forEach(entry => {
+                        const div = document.createElement('div');
+                        const active = currentProject && currentProject.type === 'dirfile' &&
+                            currentProject.dirId === dir.id && currentProject.relPath === entry.relPath;
+                        div.className = 'ws-file' + (active ? ' active' : '');
+                        div.title = entry.relPath;
+                        const sub = entry.relPath.includes('/') ? entry.relPath.slice(0, entry.relPath.lastIndexOf('/')) : '';
+                        div.innerHTML = `<span class="ws-file-name">${escapeHtml(stripExt(entry.name))}</span>` +
+                            (sub ? `<span class="ws-file-path">${escapeHtml(sub)}/</span>` : '');
+                        div.addEventListener('click', () => loadWorkspaceEntry(entry));
+                        filesDiv.appendChild(div);
+                    });
+                }
+                group.appendChild(filesDiv);
+                listEl.appendChild(group);
+            });
+
+            if (!listEl.children.length) {
+                listEl.innerHTML = sidebarEmptyHint(workspaceDirs.length
+                    ? '没有匹配「' + escapeHtml(filter) + '」的视频'
+                    : '目录里还没扫到视频文件，丢几个进来后点 🔄');
+            }
+        }
+
+        // 单目录重扫按钮
+        async function rescanOneDir(dirId) {
+            const dir = workspaceDirs.find(d => d.id === dirId);
+            if (!dir) return;
+            dir.perm = (await dir.handle.queryPermission({ mode: 'read' }).catch(() => 'prompt')) === 'granted' ? 'granted' : dir.perm;
+            await scanOneDir(dir);
+            renderWorkspaceList();
+        }
+
+        async function loadWorkspaceEntry(entry) {
+            try {
+                const file = await entry.handle.getFile();
+                const rec = {
+                    id: 'dirfile:' + entry.dirId + '|' + entry.relPath,
+                    type: 'dirfile',
+                    name: stripExt(entry.name),
+                    dirId: entry.dirId,
+                    dirName: entry.dirName,
+                    relPath: entry.relPath,
+                    videoCount: 1
+                };
+                await loadVideoFiles([file], { project: rec });
+            } catch (e) {
+                console.error(e);
+                alert('打开视频失败，文件可能已被移动或删除。\n' + (e && e.message ? e.message : e));
+            }
+        }
+
+        // 顺序加载某个目录的全部视频
+        async function loadAllWorkspace(dirId) {
+            const dir = workspaceDirs.find(d => d.id === dirId);
+            if (!dir || !dir.files.length) return;
+            try {
+                const files = [];
+                for (const entry of dir.files) files.push(await entry.handle.getFile());
+                const relPaths = dir.files.map(e => e.relPath);
+                const rec = {
+                    id: 'dirall:' + dirId + '|' + relPaths.join('|'),
+                    type: 'dirall',
+                    name: `${dir.name}（全部 ${files.length} 个视频）`,
+                    dirId: dirId,
+                    dirName: dir.name,
+                    relPaths: relPaths,
+                    videoCount: files.length
+                };
+                await loadVideoFiles(files, { project: rec, preserveOrder: true });
+            } catch (e) {
+                console.error(e);
+                alert('加载失败：' + (e && e.message ? e.message : e));
+            }
+        }
+
+        // ---------- 最近打开 ----------
+        const RECENT_ICONS = { dirfile: '📄', dirall: '🗂️', files: '🎬', url: '🔗', wedrive: '📁' };
+
+        async function renderRecentList() {
+            const listEl = document.getElementById('recentList');
+            if (!listEl) return;
+            if (!sideDb) {
+                listEl.innerHTML = sidebarEmptyHint('浏览器存储（IndexedDB）不可用<br>无法记录最近打开的项目');
+                return;
+            }
+            let recs = (await dbAll()).filter(r => r.type !== 'dir');
+            recs.sort((a, b) => (b.lastOpened || 0) - (a.lastOpened || 0));
+            recs = recs.slice(0, 30);
+
+            if (!recs.length) {
+                listEl.innerHTML = sidebarEmptyHint('还没有记录<br>加载过的视频会出现在这里，点击即可重开');
+                return;
+            }
+
+            listEl.innerHTML = '';
+            recs.forEach(rec => {
+                const div = document.createElement('div');
+                const active = currentProject && currentProject.id === rec.id;
+                div.className = 'rc-item' + (active ? ' active' : '');
+                const meta = [
+                    rec.videoCount > 1 ? `${rec.videoCount} 个视频` : null,
+                    rec.annotationCount ? `${rec.annotationCount} 条批注` : null,
+                    relTimeLabel(rec.lastOpened || Date.now())
+                ].filter(Boolean).join(' · ');
+                const reopenable = rec.type === 'url' || rec.type === 'wedrive' || rec.type === 'dirfile' ||
+                    rec.type === 'dirall' || (rec.fileHandles && rec.fileHandles.length);
+                div.innerHTML = `
+                    <div class="rc-main">
+                        <div class="rc-name">${RECENT_ICONS[rec.type] || '🎬'} ${escapeHtml(rec.name || '未命名')}${reopenable ? '' : ' <span class="rc-warn" title="浏览器限制，重开时需重新选择文件">⊘</span>'}</div>
+                        <div class="rc-meta">${escapeHtml(meta)}</div>
+                    </div>
+                    <button class="rc-del" title="从历史中删除">×</button>`;
+                div.addEventListener('click', ev => {
+                    if (ev.target.closest('.rc-del')) {
+                        deleteRecent(rec.id);
+                    } else {
+                        openRecentProject(rec.id);
+                    }
+                });
+                listEl.appendChild(div);
+            });
+        }
+
+        async function deleteRecent(id) {
+            await dbDelete(id);
+            if (currentProject && currentProject.id === id) currentProject = null;
+            renderRecentList();
+        }
+
+        async function clearRecents() {
+            if (!sideDb) return;
+            if (!confirm('确定清空所有「最近打开」记录吗？\n（不会删除本地视频文件，也不会动工作目录）')) return;
+            const recs = (await dbAll()).filter(r => r.type !== 'dir');
+            for (const r of recs) await dbDelete(r.id);
+            renderRecentList();
+        }
+
+        async function openRecentProject(id) {
+            const rec = await dbGet(id);
+            if (!rec) { renderRecentList(); return; }
+            try {
+                if (rec.type === 'url') {
+                    document.getElementById('videoUrlInput').value = rec.url || '';
+                    await loadVideoFromUrl();
+                } else if (rec.type === 'wedrive') {
+                    document.getElementById('videoUrlInput').value = rec.url || '';
+                    enableWeDriveMode(rec.url || '');
+                } else if (rec.type === 'dirfile' || rec.type === 'dirall') {
+                    await openRecentFromDir(rec);
+                } else {
+                    await openRecentFiles(rec);
+                }
+            } catch (e) {
+                console.error('打开最近项目失败：', e);
+                alert('打开项目失败：' + (e && e.message ? e.message : e));
+            }
+        }
+
+        async function openRecentFromDir(rec) {
+            const dirRec = await dbGet(rec.dirId);
+            if (!dirRec || !dirRec.handle) {
+                alert('找不到原工作目录的授权记录。\n请重新选择一次工作目录，或直接从「工作目录」标签页打开。');
+                return;
+            }
+            const granted = await ensureReadPermission(dirRec.handle);
+            if (!granted) {
+                alert('没有获得目录访问权限，请重试并在弹窗中点击「允许」。');
+                return;
+            }
+            const relPaths = rec.type === 'dirfile' ? [rec.relPath] : (rec.relPaths || []);
+            const files = [];
+            for (const p of relPaths) {
+                try {
+                    files.push(await getFileByPath(dirRec.handle, p));
+                } catch (e) {
+                    console.warn('文件不存在，已跳过：', p);
+                }
+            }
+            if (!files.length) {
+                alert('视频文件可能已被移动、重命名或删除。');
+                return;
+            }
+            await loadVideoFiles(files, { project: rec, preserveOrder: true });
+        }
+
+        async function openRecentFiles(rec) {
+            // 有文件句柄：直接重开
+            if (rec.fileHandles && rec.fileHandles.length) {
+                const files = [];
+                for (const h of rec.fileHandles) {
+                    const ok = await ensureReadPermission(h);
+                    if (!ok) {
+                        alert('没有获得文件访问权限，请重试并在弹窗中点击「允许」。');
+                        return;
+                    }
+                    files.push(await h.getFile());
+                }
+                await loadVideoFiles(files, { handles: rec.fileHandles });
+                return;
+            }
+            // 没有句柄（旧浏览器 / 降级存储）：重新选一次文件，同名项目批注会自动恢复
+            if (typeof window.showOpenFilePicker === 'function') {
+                try {
+                    const handles = await window.showOpenFilePicker({ multiple: true });
+                    const files = [];
+                    for (const h of handles) files.push(await h.getFile());
+                    if (files.length) await loadVideoFiles(files, { handles });
+                } catch (e) { /* 用户取消 */ }
+                return;
+            }
+            alert('此记录来自不支持文件句柄的浏览器，无法直接重开。\n请点击顶部「本地文件」重新选择相同的文件，批注会自动恢复。');
+        }
+
+        // ---------- 拖拽上传（尝试保留文件句柄，便于记忆）----------
+        async function handleDropUpload(dataTransfer, file) {
+            let handle = null;
+            try {
+                const item = dataTransfer.items && dataTransfer.items[0];
+                if (item && item.getAsFileSystemHandle) {
+                    const h = await item.getAsFileSystemHandle();
+                    if (h && h.kind === 'file') handle = h;
+                }
+            } catch (e) { /* 忽略，退回普通 File */ }
+            await handleVideoUpload(file, handle);
+        }
+
+        // ---------- 侧边栏 UI ----------
+        function switchSidebarTab(tab) {
+            localStorage.setItem('mp:sidebarTab', tab);
+            document.querySelectorAll('.sidebar-tab').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('tabBtn-' + tab);
+            if (btn) btn.classList.add('active');
+            document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
+            const panel = document.getElementById('sidebarPanel-' + tab);
+            if (panel) panel.classList.add('active');
+            // 切到工作目录时自动重新扫描一次（刚丢进去的新文件立刻可见）
+            if (tab === 'workspace' && workspaceDirs.some(d => d.perm === 'granted')) scanWorkspace();
+            if (tab === 'recent') renderRecentList();
+        }
+
+        function toggleSidebar() {
+            const collapsed = document.body.classList.toggle('sidebar-collapsed');
+            localStorage.setItem('mp:sidebarCollapsed', collapsed ? '1' : '');
+            document.getElementById('sidebarToggle').textContent = collapsed ? '»' : '«';
+        }
+
+        async function initSidebarApp() {
+            try {
+                sideDb = await openDb();
+            } catch (e) {
+                console.warn('IndexedDB 不可用，最近打开 / 批注缓存将不生效：', e);
+                sideDb = null;
+            }
+            if (localStorage.getItem('mp:sidebarCollapsed') === '1') {
+                document.body.classList.add('sidebar-collapsed');
+                document.getElementById('sidebarToggle').textContent = '»';
+            }
+            switchSidebarTab(localStorage.getItem('mp:sidebarTab') === 'recent' ? 'recent' : 'workspace');
+            await restoreWorkspaceDirs();
+            renderRecentList();
+            // 恢复上次工作现场（项目 + 批注 + 播放位置）
+            await restoreLastSession();
+        }
+
+        // ===================== 导入 / 导出（普通 + 超级）=====================
+        // 普通：只导/导入批注（很小的 JSON 文件）
+        // 超级：批注 + 原视频一起打包为 ZIP（零依赖 store 模式）；链接类项目打包来源链接
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 10000);
+        }
+
+        function dateStr() {
+            const d = new Date();
+            return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        // ---------- 普通导出 / 导入 ----------
+        function exportAnnotationsFile() {
+            document.getElementById('exportMenu').style.display = 'none';
+            if (!currentProject) { alert('还没有加载项目，请先加载视频并添加批注'); return; }
+            if (!annotations.length) { alert('当前项目还没有批注'); return; }
+            const data = {
+                type: 'minipreview-annotations',
+                formatVersion: 1,
+                exportedAt: new Date().toISOString(),
+                appVersion: APP_VERSION,
+                project: {
+                    name: currentProject.name,
+                    sourceType: currentProject.type,
+                    videoCount: videos.length || currentProject.videoCount || 1,
+                    fileNames: videos.length ? videos.map(v => v.file.name) : undefined
+                },
+                annotations: annotations
+            };
+            downloadBlob(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }),
+                `批注_${currentProject.name}_${dateStr()}.json`);
+        }
+
+        async function importAnnotationsFile(event) {
+            const file = event.target.files && event.target.files[0];
+            event.target.value = '';
+            if (!file) return;
+            let data;
+            try {
+                data = JSON.parse(await file.text());
+                if (data.type !== 'minipreview-annotations' || !Array.isArray(data.annotations)) {
+                    throw new Error('不是本工具导出的批注文件');
+                }
+            } catch (e) {
+                alert('导入失败：' + (e.message || e));
+                return;
+            }
+            if (!currentProject) {
+                alert(`这份批注来自《${(data.project && data.project.name) || '未知项目'}》（${data.annotations.length} 条）。\n\n请先加载对应的视频项目，再重新导入，批注会应用到当前项目。`);
+                return;
+            }
+            const fromName = (data.project && data.project.name) || '未知';
+            if (!confirm(`将《${fromName}》的 ${data.annotations.length} 条批注导入到当前项目《${currentProject.name}》？\n\n（会替换当前项目的全部批注）`)) return;
+            annotations = data.annotations;
+            renderAnnotations();
+            saveAnnotationsNow();
+            alert(`✅ 已导入 ${annotations.length} 条批注`);
+        }
+
+        // ---------- 零依赖 ZIP（store 模式，不压缩）----------
+        const CRC_TABLE = (() => {
+            const t = new Uint32Array(256);
+            for (let n = 0; n < 256; n++) {
+                let c = n;
+                for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+                t[n] = c >>> 0;
+            }
+            return t;
+        })();
+
+        // 分块流式计算 CRC32，大视频不整体进内存
+        async function crc32OfBlob(blob) {
+            const reader = blob.stream().getReader();
+            let crc = 0xFFFFFFFF;
+            for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                for (let i = 0; i < value.length; i++) {
+                    crc = CRC_TABLE[(crc ^ value[i]) & 0xFF] ^ (crc >>> 8);
+                }
+            }
+            return (crc ^ 0xFFFFFFFF) >>> 0;
+        }
+
+        // entries: [{name, blob}] → ZIP Blob（store 模式，UTF-8 文件名）
+        async function buildZip(entries) {
+            const enc = new TextEncoder();
+            const parts = [];
+            const central = [];
+            let offset = 0;
+            const now = new Date();
+            const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+            const dosDate = (((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate());
+
+            for (const e of entries) {
+                const nameBytes = enc.encode(e.name);
+                const crc = await crc32OfBlob(e.blob);
+                const size = e.blob.size;
+
+                const lh = new DataView(new ArrayBuffer(30));
+                lh.setUint32(0, 0x04034b50, true);   // local file header sig
+                lh.setUint16(4, 20, true);           // version needed
+                lh.setUint16(6, 0x0800, true);       // flags: UTF-8 文件名
+                lh.setUint16(8, 0, true);            // method: store
+                lh.setUint16(10, dosTime, true);
+                lh.setUint16(12, dosDate, true);
+                lh.setUint32(14, crc, true);
+                lh.setUint32(18, size, true);        // comp size
+                lh.setUint32(22, size, true);        // uncomp size
+                lh.setUint16(26, nameBytes.length, true);
+                lh.setUint16(28, 0, true);           // extra len
+                parts.push(new Uint8Array(lh.buffer), nameBytes, e.blob);
+
+                const ch = new DataView(new ArrayBuffer(46));
+                ch.setUint32(0, 0x02014b50, true);   // central directory sig
+                ch.setUint16(4, 20, true);           // version made by
+                ch.setUint16(6, 20, true);           // version needed
+                ch.setUint16(8, 0x0800, true);
+                ch.setUint16(10, 0, true);           // method: store
+                ch.setUint16(12, dosTime, true);
+                ch.setUint16(14, dosDate, true);
+                ch.setUint32(16, crc, true);
+                ch.setUint32(20, size, true);
+                ch.setUint32(24, size, true);
+                ch.setUint16(28, nameBytes.length, true);
+                // extra/comment/disk/internal attr 全 0
+                ch.setUint32(42, offset, true);      // local header offset
+                central.push(new Uint8Array(ch.buffer), nameBytes);
+
+                offset += 30 + nameBytes.length + size;
+            }
+
+            let cdSize = 0;
+            for (const c of central) cdSize += c.length;
+            const eocd = new DataView(new ArrayBuffer(22));
+            eocd.setUint32(0, 0x06054b50, true);     // EOCD sig
+            eocd.setUint16(8, entries.length, true); // 本 disk 条目数
+            eocd.setUint16(10, entries.length, true);
+            eocd.setUint32(12, cdSize, true);
+            eocd.setUint32(16, offset, true);        // central directory 起始偏移
+            parts.push(...central, new Uint8Array(eocd.buffer));
+            return new Blob(parts, { type: 'application/zip' });
+        }
+
+        // 解析 store 模式 ZIP（只支持本工具导出的包）
+        async function parseZip(file) {
+            const buf = await file.arrayBuffer();
+            const dv = new DataView(buf);
+            const u8 = new Uint8Array(buf);
+            let eocd = -1;
+            const scanFrom = Math.max(0, buf.byteLength - 22 - 65536);
+            for (let i = buf.byteLength - 22; i >= scanFrom; i--) {
+                if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+            }
+            if (eocd < 0) throw new Error('不是有效的 ZIP 文件');
+            const count = dv.getUint16(eocd + 10, true);
+            let p = dv.getUint32(eocd + 16, true);
+            const dec = new TextDecoder();
+            const entries = [];
+            for (let i = 0; i < count; i++) {
+                if (dv.getUint32(p, true) !== 0x02014b50) throw new Error('ZIP 结构损坏');
+                const method = dv.getUint16(p + 10, true);
+                const compSize = dv.getUint32(p + 20, true);
+                const nameLen = dv.getUint16(p + 28, true);
+                const extraLen = dv.getUint16(p + 30, true);
+                const commentLen = dv.getUint16(p + 32, true);
+                const localOff = dv.getUint32(p + 42, true);
+                const name = dec.decode(u8.subarray(p + 46, p + 46 + nameLen));
+                if (method !== 0) throw new Error(`「${name}」是压缩存储的，仅支持本工具导出的 store 包`);
+                const lNameLen = dv.getUint16(localOff + 26, true);
+                const lExtraLen = dv.getUint16(localOff + 28, true);
+                const dataStart = localOff + 30 + lNameLen + lExtraLen;
+                entries.push({ name: name, data: u8.slice(dataStart, dataStart + compSize) });
+                p += 46 + nameLen + extraLen + commentLen;
+            }
+            return entries;
+        }
+
+        // ---------- 超级导出 / 超级导入 ----------
+        async function superExport() {
+            document.getElementById('exportMenu').style.display = 'none';
+            if (!currentProject) { alert('还没有加载项目，请先加载视频'); return; }
+            try {
+                const manifest = {
+                    type: 'minipreview-bundle',
+                    bundleVersion: 1,
+                    exportedAt: new Date().toISOString(),
+                    appVersion: APP_VERSION,
+                    project: { name: currentProject.name, sourceType: currentProject.type },
+                    annotations: annotations
+                };
+                const entries = [];
+
+                if (videos.length > 0) {
+                    // 本地视频：全部打包（重名文件加序号前缀避免 ZIP 内冲突）
+                    const used = new Set();
+                    manifest.project.fileNames = videos.map((v, i) => {
+                        let n = v.file.name;
+                        if (used.has(n)) n = `${i + 1}_${n}`;
+                        used.add(n);
+                        return n;
+                    });
+                    manifest.project.videoCount = videos.length;
+                    manifest.project.fileNames.forEach((n, i) => entries.push({ name: n, blob: videos[i].file }));
+                } else if (currentProject.type === 'url' || currentProject.type === 'wedrive') {
+                    // 链接类：原文件是链接，把来源链接一起导出
+                    manifest.project.url = currentProject.url;
+                    manifest.project.videoCount = 1;
+                } else {
+                    alert('当前项目没有可打包的视频源');
+                    return;
+                }
+
+                entries.unshift({ name: 'manifest.json', blob: new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' }) });
+                const zip = await buildZip(entries);
+                downloadBlob(zip, `${currentProject.name}_完整包_${dateStr()}.zip`);
+            } catch (e) {
+                console.error('超级导出失败：', e);
+                alert('超级导出失败：' + (e.message || e));
+            }
+        }
+
+        async function superImport(event) {
+            const file = event.target.files && event.target.files[0];
+            event.target.value = '';
+            if (!file) return;
+
+            let manifest, videoEntries;
+            try {
+                const entries = await parseZip(file);
+                const mEntry = entries.find(e => e.name === 'manifest.json' || e.name.endsWith('/manifest.json'));
+                if (!mEntry) throw new Error('包里找不到 manifest.json（可能不是本工具导出的完整包）');
+                manifest = JSON.parse(new TextDecoder().decode(mEntry.data));
+                if (manifest.type !== 'minipreview-bundle' || !manifest.project) throw new Error('manifest 格式不正确');
+                videoEntries = entries.filter(e => e !== mEntry);
+            } catch (e) {
+                alert('超级导入失败：' + (e.message || e));
+                return;
+            }
+
+            try {
+                const p = manifest.project;
+                if (p.fileNames && p.fileNames.length) {
+                    // 本地视频包：还原为播放列表项目
+                    const files = [];
+                    const missing = [];
+                    for (const n of p.fileNames) {
+                        const entry = videoEntries.find(e => e.name === n || e.name.endsWith('/' + n));
+                        if (!entry) { missing.push(n); continue; }
+                        files.push(new File([entry.data], n));
+                    }
+                    if (missing.length) { alert('完整包里缺少视频文件：\n' + missing.join('\n')); return; }
+                    await loadVideoFiles(files, { handles: [] });
+                } else if (p.url) {
+                    // 链接 / 微盘包：还原来源链接
+                    if (p.sourceType === 'wedrive') {
+                        document.getElementById('videoUrlInput').value = p.url;
+                        enableWeDriveMode(p.url);
+                        await openProjectRecord({ id: 'wedrive:' + p.url, type: 'wedrive', name: p.name || ('微盘：' + urlName(p.url)), url: p.url, videoCount: 1 });
+                    } else {
+                        document.getElementById('videoUrlInput').value = p.url;
+                        loadVideo(p.url);
+                        await openProjectRecord({ id: 'url:' + p.url, type: 'url', name: p.name || urlName(p.url), url: p.url, videoCount: 1 });
+                    }
+                } else {
+                    alert('完整包里没有视频或链接信息');
+                    return;
+                }
+                annotations = manifest.annotations || [];
+                renderAnnotations();
+                saveAnnotationsNow();
+                alert(`✅ 超级导入成功：${p.name || ''}\n${annotations.length} 条批注已恢复`);
+            } catch (e) {
+                console.error('超级导入失败：', e);
+                alert('超级导入失败：' + (e.message || e));
+            }
+        }
+
+        // ===================== 一键转码（本机转码助手）=====================
+        // 浏览器解不出 H.265 时，把视频发给本机运行的转码助手（Python + ffmpeg）
+        // 转成 H.264 后自动加载。助手未运行时引导一键下载自助安装包。
+
+        const HELPER_BASE = 'http://127.0.0.1:17832';
+
+        async function transcodeCurrentVideo() {
+            const btn = document.getElementById('transcodeBtn');
+            const status = document.getElementById('transcodeStatus');
+            let file = null;
+            if (videos.length > 0) file = videos[currentVideoIndex].file;
+            if (!file) {
+                alert('一键转码目前支持本地视频文件（链接类视频无法转码）');
+                return;
+            }
+            btn.disabled = true;
+            btn.style.opacity = 0.6;
+            status.textContent = '正在连接本机转码助手…';
+            try {
+                // 1) 探活（3 秒超时）
+                const ctrl = new AbortController();
+                const timer = setTimeout(() => ctrl.abort(), 3000);
+                let info;
+                try {
+                    const ping = await fetch(HELPER_BASE + '/ping', { signal: ctrl.signal });
+                    info = await ping.json();
+                } finally {
+                    clearTimeout(timer);
+                }
+                if (!info.ffmpeg) {
+                    alert('本机还没有安装 ffmpeg（转码引擎）。\n\n安装方法（管理员命令行运行）：\nwinget install Gyan.FFmpeg\n\n装好后重新点「一键转码」。');
+                    return;
+                }
+
+                // 2) 上传到本机助手
+                status.textContent = '正在上传视频到本机助手…（大文件稍等）';
+                const form = new FormData();
+                form.append('file', file, file.name);
+                const res = await fetch(HELPER_BASE + '/transcode', {
+                    method: 'POST',
+                    body: form,
+                    headers: { 'X-Video-Duration': String(video.duration || 0) }
+                });
+                const started = await res.json();
+                if (!started.job) throw new Error(started.error || '启动转码失败');
+
+                // 3) 轮询进度
+                for (;;) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    const p = await (await fetch(HELPER_BASE + '/progress/' + started.job)).json();
+                    if (p.error) throw new Error(p.error);
+                    if (p.running) {
+                        status.textContent = `⏳ ${p.message || '转码中'} ${p.percent || 0}%`;
+                    } else {
+                        break;
+                    }
+                }
+
+                // 4) 取回转码结果并自动加载
+                status.textContent = '转码完成，正在加载新视频…';
+                const blob = await (await fetch(HELPER_BASE + '/result/' + started.job)).blob();
+                const baseName = file.name.replace(/\.[^.]+$/, '') || 'video';
+                const newName = baseName + '_h264.mp4';
+                await loadVideoFiles([new File([blob], newName, { type: 'video/mp4' })]);
+                alert('✅ 转码完成，已自动加载：' + newName);
+            } catch (e) {
+                const offline = e.name === 'AbortError' || /Failed to fetch|NetworkError/i.test(e.message || '');
+                if (offline) {
+                    if (confirm('本机还没有运行「MiniPreview 转码助手」。\n\n点「确定」下载助手包，解压后双击「启动转码助手.bat」即可（需要 Python 和 ffmpeg，只需启动一次）。\n\n之后页面上的「一键转码」就能直接用了。')) {
+                        downloadHelperZip();
+                    }
+                } else {
+                    alert('转码失败：' + (e.message || e));
+                }
+            } finally {
+                btn.disabled = false;
+                btn.style.opacity = '';
+                status.textContent = '在本机转码，完成后自动加载';
+            }
+        }
+
+        // ---------- 转码助手自助安装包（页面内嵌，供下载）----------
+        // 注意：与本机 mp_transcode_helper.py 保持同步（docs/reference/transcode.md 有说明）
+        const HELPER_PY = String.raw`# -*- coding: utf-8 -*-
+"""MiniPreview 本机转码助手
+
+在本机 127.0.0.1:17832 提供转码服务，供 MiniPreview 网页「一键转码」按钮调用。
+依赖：Python 3 + ffmpeg（PATH 中或常见安装位置）。
+"""
+import json
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+import threading
+import time
+import uuid
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import urlparse, quote
+
+PORT = 17832
+CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Video-Duration',
+    'Access-Control-Allow-Private-Network': 'true',
+    'Access-Control-Max-Age': '86400',
+}
+
+def find_ffmpeg():
+    p = shutil.which('ffmpeg')
+    if p:
+        return p
+    candidates = [
+        os.path.expandvars(r'%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe'),
+        r'C:\Program Files\ffmpeg\bin\ffmpeg.exe',
+        r'C:\ffmpeg\bin\ffmpeg.exe',
+    ]
+    for c in candidates:
+        if os.path.isfile(c):
+            return c
+    return None
+
+JOBS = {}
+LOCK = threading.Lock()
+
+def run_transcode(job_id, in_path, out_dir, orig_name, duration):
+    job = JOBS[job_id]
+    ffmpeg = find_ffmpeg()
+    if not ffmpeg:
+        job.update(running=False, error='本机没有安装 ffmpeg，请先安装：winget install Gyan.FFmpeg')
+        return
+    base = re.sub(r'\.[^.]+$', '', orig_name) or 'video'
+    out_path = os.path.join(out_dir, base + '_h264.mp4')
+    job['out_path'] = out_path
+    job['out_name'] = base + '_h264.mp4'
+    attempts = [
+        # 优先硬件编码（NVIDIA NVENC，速度数倍于软编），不可用时自动回退 libx264
+        ['-c:v', 'h264_nvenc', '-cq', '20', '-c:a', 'copy'],
+        ['-c:v', 'h264_nvenc', '-cq', '20', '-c:a', 'aac', '-b:a', '192k'],
+        ['-c:v', 'libx264', '-crf', '18', '-preset', 'fast', '-c:a', 'copy'],
+        ['-c:v', 'libx264', '-crf', '18', '-preset', 'fast', '-c:a', 'aac', '-b:a', '192k'],
+    ]
+    last_err = ''
+    for i, acodec_args in enumerate(attempts):
+        job['message'] = '正在转码（尝试 %d/4）…' % (i + 1)
+        cmd = [ffmpeg, '-y', '-i', in_path] + acodec_args + ['-movflags', '+faststart', out_path]
+        try:
+            proc = subprocess.Popen(cmd, stderr=subprocess.PIPE, universal_newlines=True,
+                                    encoding='utf-8', errors='replace')
+            for line in proc.stderr:
+                m = re.search(r'time=(\d+):(\d+):(\d+(?:\.\d+)?)', line)
+                if m and duration and duration > 0:
+                    t = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
+                    job['percent'] = round(min(99, t / duration * 100), 1)
+            code = proc.wait()
+            if code == 0 and os.path.isfile(out_path) and os.path.getsize(out_path) > 0:
+                job.update(running=False, percent=100, message='转码完成')
+                return
+            last_err = 'ffmpeg 退出码 %s' % code
+        except Exception as e:
+            last_err = str(e)
+    job.update(running=False, error='转码失败：' + last_err)
+
+def read_multipart(body, boundary):
+    parts = body.split(boundary)
+    for part in parts:
+        if b'filename="' not in part:
+            continue
+        header, _, content = part.partition(b'\r\n\r\n')
+        m = re.search(rb'filename="([^"]+)"', header)
+        name = m.group(1).decode('utf-8', 'replace') if m else 'video.mp4'
+        content = content.rsplit(b'\r\n--', 1)[0]
+        return name, content
+    return 'video.mp4', b''
+
+class Handler(BaseHTTPRequestHandler):
+    protocol_version = 'HTTP/1.1'
+
+    def log_message(self, fmt, *args):
+        pass
+
+    def _cors(self):
+        for k, v in CORS_HEADERS.items():
+            self.send_header(k, v)
+
+    def _json(self, obj, status=200):
+        data = json.dumps(obj).encode('utf-8')
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Content-Length', str(len(data)))
+        self._cors()
+        self.end_headers()
+        self.wfile.write(data)
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header('Content-Length', '0')
+        self._cors()
+        self.end_headers()
+
+    def do_GET(self):
+        path = urlparse(self.path).path
+        if path == '/ping':
+            self._json({'ok': True, 'service': 'minipreview-transcode-helper', 'ffmpeg': bool(find_ffmpeg())})
+            return
+        m = re.match(r'^/progress/([0-9a-f-]+)$', path)
+        if m:
+            job = JOBS.get(m.group(1))
+            if not job:
+                self._json({'error': 'job 不存在'}, 404)
+                return
+            with LOCK:
+                self._json({k: job.get(k) for k in ('running', 'percent', 'message', 'error')})
+            return
+        m = re.match(r'^/result/([0-9a-f-]+)$', path)
+        if m:
+            job = JOBS.get(m.group(1))
+            if not job or job.get('running'):
+                self._json({'error': '结果未就绪'}, 404)
+                return
+            if job.get('error'):
+                self._json({'error': job['error']}, 500)
+                return
+            try:
+                with open(job['out_path'], 'rb') as f:
+                    data = f.read()
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/octet-stream')
+                self.send_header('Content-Length', str(len(data)))
+                self.send_header('Content-Disposition', "attachment; filename*=UTF-8''" + quote(job['out_name']))
+                self._cors()
+                self.end_headers()
+                self.wfile.write(data)
+            except Exception as e:
+                self._json({'error': str(e)}, 500)
+            finally:
+                try:
+                    os.remove(job['in_path'])
+                    os.remove(job['out_path'])
+                except OSError:
+                    pass
+                with LOCK:
+                    JOBS.pop(m.group(1), None)
+            return
+        self._json({'error': 'not found'}, 404)
+
+    def do_POST(self):
+        if urlparse(self.path).path != '/transcode':
+            self._json({'error': 'not found'}, 404)
+            return
+        length = int(self.headers.get('Content-Length') or 0)
+        ctype = self.headers.get('Content-Type', '')
+        m = re.search(r'boundary=(.+)', ctype)
+        if not m or length <= 0:
+            self._json({'error': '请求格式错误'}, 400)
+            return
+        body = self.rfile.read(length)
+        boundary = ('--' + m.group(1).strip('"')).encode()
+        name, content = read_multipart(body, boundary)
+        if not content:
+            self._json({'error': '没有收到文件'}, 400)
+            return
+        try:
+            duration = float(self.headers.get('X-Video-Duration') or 0)
+        except ValueError:
+            duration = 0
+        tmpdir = tempfile.mkdtemp(prefix='mp_transcode_')
+        safe_name = re.sub(r'[\\/:*?"<>|]', '_', name)
+        in_path = os.path.join(tmpdir, safe_name)
+        with open(in_path, 'wb') as f:
+            f.write(content)
+        job_id = str(uuid.uuid4())
+        with LOCK:
+            JOBS[job_id] = {'running': True, 'percent': 0, 'message': '排队中…',
+                            'in_path': in_path, 'out_dir': tmpdir}
+        threading.Thread(target=run_transcode, args=(job_id, in_path, tmpdir, safe_name, duration), daemon=True).start()
+        self._json({'job': job_id})
+
+def main():
+    print('MiniPreview 转码助手已启动：http://127.0.0.1:%d  （保持此窗口开启；关闭窗口即停止）' % PORT)
+    print('ffmpeg:', find_ffmpeg() or '未找到（请安装：winget install Gyan.FFmpeg）')
+    try:
+        HTTPServer(('127.0.0.1', PORT), Handler).serve_forever()
+    except OSError as e:
+        print('启动失败（可能已在运行）：', e)
+        time.sleep(3)
+
+if __name__ == '__main__':
+    main()`;
+
+        const HELPER_BAT = String.raw`@echo off
+chcp 65001 >nul
+title MiniPreview 转码助手
+cd /d "%~dp0"
+where python >nul 2>nul
+if errorlevel 1 (
+  echo 未找到 Python，请先安装 Python 3：https://www.python.org/downloads/
+  pause
+  exit /b 1
+)
+python mp_transcode_helper.py
+pause
+`;
+
+        const HELPER_README = `MiniPreview 转码助手 使用说明
+
+作用：配合 MiniPreview 审片页面的「一键转码」按钮，在本机把 H.265（HEVC）等浏览器解不出的视频转成 H.264。
+
+一次性安装（3 步）：
+1. 安装 Python 3：https://www.python.org/downloads/ （安装时勾选 Add to PATH）
+2. 安装 ffmpeg：管理员命令行运行  winget install Gyan.FFmpeg
+3. 双击「启动转码助手.bat」，看到"已启动"即可（窗口保持开着；想开机常驻可把 bat 的快捷方式放进 shell:startup）
+
+使用：回到 MiniPreview 页面，加载视频后点「🔧 一键转码为 H.264」，转完自动加载。
+
+安全说明：助手只监听本机 127.0.0.1，不对外网开放；视频在本机转码，不上传任何服务器。
+`;
+
+        async function downloadHelperZip() {
+            const entries = [
+                { name: 'mp_transcode_helper.py', blob: new Blob([HELPER_PY], { type: 'text/x-python' }) },
+                { name: '启动转码助手.bat', blob: new Blob(['\ufeff' + HELPER_BAT], { type: 'text/plain' }) },
+                { name: '使用说明.txt', blob: new Blob(['\ufeff' + HELPER_README], { type: 'text/plain;charset=utf-8' }) }
+            ];
+            downloadBlob(await buildZip(entries), 'MiniPreview转码助手.zip');
         }
     </script>
 </body>
