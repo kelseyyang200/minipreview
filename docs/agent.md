@@ -20,6 +20,7 @@
 | 改版本号、强刷逻辑、更新日志、一键刷新 | [reference/version-refresh.md](reference/version-refresh.md) |
 | 改导入/导出（批注 JSON / 超级 ZIP 完整包） | [reference/import-export.md](reference/import-export.md) |
 | 改一键转码 / 本机转码助手 | [reference/transcode.md](reference/transcode.md) |
+| 改文档审阅（Markdown 剧本 / AI Prompt 导出） | [reference/doc-review.md](reference/doc-review.md) |
 | 给上游提 PR / 了解改了上游哪些 bug | [reference/upstream-bugs.md](reference/upstream-bugs.md) |
 | 看待办 / 路线图 / 历史开发情况 | [todo.md](todo.md) |
 

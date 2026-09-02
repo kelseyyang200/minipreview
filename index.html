@@ -1057,6 +1057,121 @@
             color: var(--warning);
         }
 
+        /* ===== 文档审阅（Markdown 剧本）===== */
+        #docViewer {
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 24px 32px 48px;
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--text-primary);
+        }
+
+        body.doc-mode #docViewer { display: block; }
+        body.doc-mode #videoPlayer { display: none !important; }
+        body.doc-mode #uploadHint { display: none !important; }
+        body.doc-mode #timelineSection { display: none; }
+        body.doc-mode #controlsBar { display: none; }
+        body.doc-mode .video-wrapper { background: var(--bg-primary); }
+
+        .doc-line {
+            display: flex;
+            gap: 14px;
+            padding: 1px 8px 1px 0;
+            border-radius: 4px;
+            border-left: 3px solid transparent;
+            min-height: 22px;
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+
+        .doc-line:hover { background: rgba(255, 255, 255, 0.04); }
+
+        .doc-line.selected {
+            background: rgba(0, 212, 170, 0.10);
+            border-left-color: var(--accent);
+        }
+
+        .doc-line.has-note {
+            border-left-color: var(--warning);
+            background: rgba(255, 107, 107, 0.05);
+        }
+
+        .doc-line.flash {
+            animation: docFlash 1.2s ease;
+        }
+
+        @keyframes docFlash {
+            0% { background: rgba(0, 212, 170, 0.35); }
+            100% { background: rgba(255, 107, 107, 0.05); }
+        }
+
+        .doc-line-num {
+            flex: 0 0 40px;
+            text-align: right;
+            color: var(--text-muted);
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 11px;
+            padding-top: 3px;
+            user-select: none;
+        }
+
+        .doc-line.has-note .doc-line-num { color: var(--warning); }
+
+        .doc-line-text {
+            flex: 1;
+            min-width: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .doc-line-text strong { color: #fff; }
+        .doc-line-text code {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 0 4px;
+            font-size: 12px;
+        }
+
+        .doc-line-heading .doc-line-text { font-weight: 700; }
+        .doc-line-h1 .doc-line-text { font-size: 20px; color: #fff; margin: 10px 0 2px; }
+        .doc-line-h2 .doc-line-text { font-size: 17px; color: #fff; margin: 8px 0 2px; }
+        .doc-line-h3 .doc-line-text { font-size: 15px; color: var(--text-primary); margin: 6px 0 2px; }
+        .doc-line-quote .doc-line-text { color: var(--text-secondary); font-style: italic; }
+        .doc-line-divider .doc-line-text { color: var(--text-muted); }
+
+        /* 文档模式提示条（原控制栏位置） */
+        .doc-toolbar {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        body.doc-mode .doc-toolbar { display: flex; }
+
+        .doc-toolbar kbd {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 1px 5px;
+            font-size: 10px;
+            color: var(--text-primary);
+        }
+
+        .doc-note-count {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
         .rc-item {
             display: flex;
             align-items: center;
@@ -1298,7 +1413,7 @@
             <input type="text" id="videoUrlInput" placeholder="粘贴视频链接或选择本地文件..." onkeypress="handleUrlKeyPress(event)" />
             <button class="btn" onclick="loadVideoFromUrl()">加载</button>
             <button class="btn" onclick="pickLocalFiles()">本地文件</button>
-            <input type="file" id="fileInput" accept="video/*" multiple onchange="loadLocalFiles(event)" />
+            <input type="file" id="fileInput" accept="video/*,.md,.markdown,.txt" multiple onchange="loadLocalFiles(event)" />
             <button class="btn" id="addVideoBtn" style="display: none;" onclick="document.getElementById('addFileInput').click()">➕ 添加视频</button>
             <input type="file" id="addFileInput" accept="video/*" multiple onchange="addMoreVideos(event)" style="display: none;" />
         </div>
@@ -1312,6 +1427,7 @@
                 <button onclick="exportAsText()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">📝 文本格式</button>
                 <button onclick="exportAsImage()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">🖼️ 图片格式</button>
                 <button onclick="exportAnnotationsFile()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">💾 批注文件（很小的 JSON）</button>
+                <button onclick="exportAiPrompt()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">🤖 AI 修改指令（Prompt）</button>
                 <button onclick="superExport()" style="width: 100%; padding: 8px 16px; background: none; border: none; color: var(--text-primary); text-align: left; cursor: pointer; font-size: 13px;">📦 超级导出（批注 + 视频打包）</button>
                 <div style="height: 1px; background: var(--border); margin: 4px 0;"></div>
                 <div style="padding: 6px 16px 2px; font-size: 11px; color: var(--text-muted);">导入</div>
@@ -1398,10 +1514,12 @@
                     <div style="margin-top: 6px; color: var(--text-muted);">其他办法：改用 Edge + 微软商店「HEVC 视频扩展」，或手动 ffmpeg：<code>ffmpeg -i 输入.mp4 -c:v libx264 -crf 18 -c:a copy 输出.mp4</code></div>
                 </div>
                 <video id="videoPlayer" style="display: none;" onclick="togglePlay()"></video>
+                <!-- 文档审阅视图（Markdown 剧本） -->
+                <div id="docViewer"></div>
             </div>
 
             <!-- 时间轴 -->
-            <div class="timeline-section">
+            <div class="timeline-section" id="timelineSection">
                 <div class="timeline-header">
                     <div class="timeline-time">
                         当前时间: <span id="currentTime">00:00:00</span>
@@ -1420,7 +1538,7 @@
             </div>
 
             <!-- 控制栏 -->
-            <div class="controls">
+            <div class="controls" id="controlsBar">
                 <button class="control-btn" id="backBtn" onclick="skipByStep(-1)" title="后退 1秒">⏪</button>
                 <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()" title="播放/暂停">▶️</button>
                 <button class="control-btn" id="fwdBtn" onclick="skipByStep(1)" title="前进 1秒">⏩</button>
@@ -1458,6 +1576,13 @@
                     <div><kbd>F</kbd> 逐帧</div>
                     <div><kbd>←</kbd><kbd>→</kbd> 按步长</div>
                 </div>
+            </div>
+
+            <!-- 文档审阅工具栏（doc 模式下替代视频控制栏） -->
+            <div class="doc-toolbar">
+                <span>📄 <span id="docFileName"></span></span>
+                <span>单击选行 · <b>双击行</b>添加批注 · <kbd>M</kbd> 给选中行加批注 · 左侧红线 = 已有批注</span>
+                <span>批注 <span class="doc-note-count" id="docNoteCount">0</span> 条</span>
             </div>
         </div>
 
@@ -1534,9 +1659,17 @@
         //   2) 强刷 URL 追加时间戳参数，必然绕过缓存拿到新版；
         //   3) 远端版本号解析失败 / 网络失败时绝不刷新；
         //   4) 只有远端版本号 ≠ 本地版本号才刷。
-        const APP_VERSION = '1.5.0';
+        const APP_VERSION = '1.6.0';
 
         const CHANGELOG = [
+            {
+                version: '1.6.0',
+                date: '2026-08-27',
+                items: [
+                    '新增文档审阅：Markdown / txt 剧本按行渲染，双击行加批注（锚定行号），支持工作目录 / 拖拽 / 最近打开 / 超级导入导出全链路',
+                    '新增「🤖 AI 修改指令」导出：剧本批注自动组装成让 AI 修改剧本的完整 Prompt（含行号原文与输出要求），视频批注则整理成剪辑修改清单'
+                ]
+            },
             {
                 version: '1.5.0',
                 date: '2026-08-27',
@@ -1822,6 +1955,12 @@
                 return;
             }
             
+            // 检测文档链接（.md/.txt 剧本）
+            if (DOC_EXTS.some(ext => url.toLowerCase().split('?')[0].endsWith(ext))) {
+                loadDocumentFromUrl(url);
+                return;
+            }
+
             // 检测是否是视频文件链接
             const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
             const isVideoFile = videoExtensions.some(ext => url.toLowerCase().includes(ext));
@@ -1997,6 +2136,12 @@
             files = Array.from(files);
             if (files.length === 0) return;
 
+            // 文档类文件（Markdown 剧本等）走文档审阅
+            if (isDocFilename(files[0].name)) {
+                await loadDocumentFile(files[0], (opts.handles || [])[0], opts.project);
+                return;
+            }
+
             // 按文件名排序（识别集数）
             if (!opts.preserveOrder) files = sortVideoFiles(files);
 
@@ -2035,6 +2180,7 @@
             
             if (videos.length > 0) {
                 loadVideoByIndex(0);
+                switchContentType('video');
                 updateMultiVideoTimeline();
                 document.getElementById('addVideoBtn').style.display = 'inline-block';
                 document.getElementById('statusHint').innerHTML = `📁 ${videos.length} 个视频`;
@@ -2239,7 +2385,7 @@
                 wrapper.style.background = '';
                 
                 const files = e.dataTransfer.files;
-                if (files.length > 0 && files[0].type.startsWith('video/')) {
+                if (files.length > 0 && (files[0].type.startsWith('video/') || isDocFilename(files[0].name))) {
                     handleDropUpload(e.dataTransfer, files[0]);
                 }
             });
@@ -2544,6 +2690,15 @@
 
         // 在当前位置添加标签
         function addMarkerAtCurrentTime() {
+            if (isDocMode()) {
+                // 文档模式：给当前选中行加批注
+                if (selectedDocLine > 0) {
+                    addDocAnnotation(selectedDocLine);
+                } else {
+                    alert('请先单击选中剧本中的某一行，再按 M 添加批注');
+                }
+                return;
+            }
             addMarker(video.currentTime);
         }
 
@@ -2601,13 +2756,15 @@
         function renderAnnotations() {
             const list = document.getElementById('annotationsList');
             const markers = document.getElementById('timelineMarkers');
-            
+
             // 更新时间轴标签
             let markersHTML = '';
             annotations.forEach(a => {
                 let position = 0;
-                
-                if (videos.length > 0) {
+
+                if (isDocMode()) {
+                    // 文档模式：时间轴不渲染标记
+                } else if (videos.length > 0) {
                     // 多视频模式：使用全局时间计算位置
                     position = (a.time / totalDuration) * 100;
                     
@@ -2644,17 +2801,29 @@
                 list.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📝</div>
-                        <p>还没有批注<br>双击时间轴或按 M 添加标签</p>
+                        <p>${isDocMode() ? '还没有批注<br>双击剧本某一行添加批注' : '还没有批注<br>双击时间轴或按 M 添加标签'}</p>
                     </div>
                 `;
             } else {
-                // 显示所有批注，但时间显示本地时间
+                // 显示所有批注：文档模式按行号，视频模式按时间
                 list.innerHTML = annotations.map(a => {
-                    // 显示本地时间
+                    if (isDocMode()) {
+                        return `
+                        <div class="annotation-item" id="annotation-${a.id}" onclick="jumpToAnnotation(${a.id})">
+                            <div class="annotation-header">
+                                <div class="annotation-time">第 ${a.lineNumber} 行</div>
+                                <div class="annotation-actions">
+                                    <button class="annotation-action" onclick="event.stopPropagation(); editAnnotation(${a.id})" title="编辑">✏️</button>
+                                    <button class="annotation-action delete" onclick="event.stopPropagation(); deleteAnnotation(${a.id})" title="删除">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="annotation-content" id="content-${a.id}">${a.content || '<span style="color: var(--text-muted)">点击编辑批注...</span>'}</div>
+                        </div>
+                    `;
+                    }
                     const timeDisplay = videos.length > 0 ? formatTime(a.localTime) : formatTime(a.time);
-                    // 显示集数名称（多视频模式）
                     const episodeName = videos.length > 0 ? `<span style="color: var(--accent); font-size: 12px;">${a.videoName}</span>` : '';
-                    
+
                     return `
                         <div class="annotation-item" id="annotation-${a.id}" onclick="jumpToAnnotation(${a.id})">
                             <div class="annotation-header">
@@ -2669,9 +2838,14 @@
                     `;
                 }).join('');
             }
-            
+
             // 更新计数
             document.getElementById('markerCount').textContent = `${annotations.length} 个标签`;
+
+            // 文档模式：同步刷新行高亮与工具栏计数
+            if (isDocMode()) {
+                renderDocument();
+            }
 
             // 批注有变化时，自动保存到本地缓存（IndexedDB）
             scheduleAnnotationSave();
@@ -2681,7 +2855,15 @@
         function jumpToAnnotation(id) {
             const annotation = annotations.find(a => a.id === id);
             if (!annotation) return;
-            
+
+            // 文档模式：滚动到对应行并闪烁
+            if (isDocMode()) {
+                jumpToDocLine(annotation.lineNumber);
+                const item = document.getElementById(`annotation-${id}`);
+                if (item) item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+
             // 如果是微盘模式，提示用户手动跳转
             if (window.currentWeDriveUrl) {
                 alert(`⏱️ 批注时间点：${formatTime(annotation.time)}\n\n请在微盘中手动跳转到此时间点。\n\n批注内容：${annotation.content || '（未填写）'}`);
@@ -2802,8 +2984,8 @@
                 renderAnnotations();
             }
             
-            // 如果是本地视频，自动播放
-            if (video.style.display !== 'none' && !window.currentWeDriveUrl) {
+            // 如果是本地视频，自动播放（文档模式无视频可播）
+            if (!isDocMode() && video.style.display !== 'none' && !window.currentWeDriveUrl) {
                 video.play();
             }
             
@@ -2881,9 +3063,15 @@
             }
             
             markdown += `---\n\n`;
-            
+
             // 按视频分组
-            if (videos.length > 0) {
+            if (isDocMode()) {
+                // 文档批注：按行号输出
+                markdown += `文档：${docFileName}\n\n`;
+                annotations.forEach(a => {
+                    markdown += `第 ${a.lineNumber} 行  ${a.content || '（未填写批注）'}\n\n`;
+                });
+            } else if (videos.length > 0) {
                 const grouped = {};
                 annotations.forEach(a => {
                     const key = a.videoName || '未知';
@@ -3463,7 +3651,18 @@
         // 判断能否免打扰地自动恢复（无需权限弹窗）
         async function canAutoRestore(rec) {
             if (rec.type === 'url' || rec.type === 'wedrive') return true;
+            if (rec.type === 'doc') {
+                // 文档：URL 来源直接恢复；本地文件看句柄授权
+                if (rec.docUrl) return true;
+                if (rec.fileHandles && rec.fileHandles.length) {
+                    try {
+                        return await rec.fileHandles[0].queryPermission({ mode: 'read' }) === 'granted';
+                    } catch (e) { return false; }
+                }
+                return false;
+            }
             if (rec.type === 'dirfile' || rec.type === 'dirall') {
+                // 文档或视频目录条目：检查来源目录句柄
                 const dirRec = await dbGet(rec.dirId);
                 if (!dirRec || !dirRec.handle) return false;
                 try { return await dirRec.handle.queryPermission({ mode: 'read' }) === 'granted'; } catch (e) { return false; }
@@ -3640,8 +3839,8 @@
                 if (entry.kind === 'directory') {
                     if (entry.name.startsWith('.')) continue;
                     await scanDirRecursive(entry, prefix + entry.name + '/', depth + 1, out);
-                } else if (entry.kind === 'file' && isVideoFilename(entry.name)) {
-                    out.push({ name: entry.name, relPath: prefix + entry.name, handle: entry });
+                } else if (entry.kind === 'file' && isReviewableFilename(entry.name)) {
+                    out.push({ name: entry.name, relPath: prefix + entry.name, handle: entry, isDoc: isDocFilename(entry.name) });
                 }
             }
         }
@@ -3756,10 +3955,13 @@
                         const div = document.createElement('div');
                         const active = currentProject && currentProject.type === 'dirfile' &&
                             currentProject.dirId === dir.id && currentProject.relPath === entry.relPath;
-                        div.className = 'ws-file' + (active ? ' active' : '');
+                        const docActive = currentProject && currentProject.type === 'doc' &&
+                            currentProject.id === 'doc:' + entry.name;
+                        div.className = 'ws-file' + ((active || docActive) ? ' active' : '');
                         div.title = entry.relPath;
                         const sub = entry.relPath.includes('/') ? entry.relPath.slice(0, entry.relPath.lastIndexOf('/')) : '';
-                        div.innerHTML = `<span class="ws-file-name">${escapeHtml(stripExt(entry.name))}</span>` +
+                        const icon = entry.isDoc ? '📄 ' : '';
+                        div.innerHTML = `<span class="ws-file-name">${icon}${escapeHtml(stripExt(entry.name))}</span>` +
                             (sub ? `<span class="ws-file-path">${escapeHtml(sub)}/</span>` : '');
                         div.addEventListener('click', () => loadWorkspaceEntry(entry));
                         filesDiv.appendChild(div);
@@ -3788,6 +3990,20 @@
         async function loadWorkspaceEntry(entry) {
             try {
                 const file = await entry.handle.getFile();
+                if (entry.isDoc) {
+                    const rec = {
+                        id: 'dirfile:' + entry.dirId + '|' + entry.relPath,
+                        type: 'dirfile',
+                        isDoc: true,
+                        name: stripExt(entry.name),
+                        dirId: entry.dirId,
+                        dirName: entry.dirName,
+                        relPath: entry.relPath,
+                        videoCount: 1
+                    };
+                    await loadDocumentFile(file, null, rec);
+                    return;
+                }
                 const rec = {
                     id: 'dirfile:' + entry.dirId + '|' + entry.relPath,
                     type: 'dirfile',
@@ -3829,7 +4045,7 @@
         }
 
         // ---------- 最近打开 ----------
-        const RECENT_ICONS = { dirfile: '📄', dirall: '🗂️', files: '🎬', url: '🔗', wedrive: '📁' };
+        const RECENT_ICONS = { dirfile: '📄', dirall: '🗂️', files: '🎬', url: '🔗', wedrive: '📁', doc: '📝' };
 
         async function renderRecentList() {
             const listEl = document.getElementById('recentList');
@@ -3902,6 +4118,8 @@
                     enableWeDriveMode(rec.url || '');
                 } else if (rec.type === 'dirfile' || rec.type === 'dirall') {
                     await openRecentFromDir(rec);
+                } else if (rec.type === 'doc' && rec.docUrl) {
+                    await loadDocumentFromUrl(rec.docUrl);
                 } else {
                     await openRecentFiles(rec);
                 }
@@ -3976,6 +4194,10 @@
                     if (h && h.kind === 'file') handle = h;
                 }
             } catch (e) { /* 忽略，退回普通 File */ }
+            if (isDocFilename(file.name)) {
+                await loadDocumentFile(file, handle);
+                return;
+            }
             await handleVideoUpload(file, handle);
         }
 
@@ -4228,6 +4450,11 @@
                     });
                     manifest.project.videoCount = videos.length;
                     manifest.project.fileNames.forEach((n, i) => entries.push({ name: n, blob: videos[i].file }));
+                } else if (isDocMode() && docFile) {
+                    // 文档（剧本）：原文件一起打包
+                    manifest.project.fileNames = [docFileName];
+                    manifest.project.videoCount = 1;
+                    entries.push({ name: docFileName, blob: docFile });
                 } else if (currentProject.type === 'url' || currentProject.type === 'wedrive') {
                     // 链接类：原文件是链接，把来源链接一起导出
                     manifest.project.url = currentProject.url;
@@ -4629,6 +4856,235 @@ pause
                 { name: '使用说明.txt', blob: new Blob(['\ufeff' + HELPER_README], { type: 'text/plain;charset=utf-8' }) }
             ];
             downloadBlob(await buildZip(entries), 'MiniPreview转码助手.zip');
+        }
+
+        // ===================== 文档审阅（Markdown 剧本）=====================
+        // 剧本等文档按行渲染，批注锚定行号；复用 annotations / 批注面板 / 项目记录 / 导入导出生态
+
+        const DOC_EXTS = ['.md', '.markdown', '.txt'];
+        let docContent = '';       // 原始文本
+        let docFileName = '';      // 文件名
+        let docFile = null;        // 原始 File 引用（超级导出用）
+        let selectedDocLine = 0;   // 当前选中行（M 键批注目标）
+
+        function isDocFilename(name) {
+            const n = name.toLowerCase();
+            return DOC_EXTS.some(ext => n.endsWith(ext));
+        }
+
+        // 当前是否处于文档审阅模式
+        function isDocMode() {
+            return document.body.classList.contains('doc-mode');
+        }
+
+        function isReviewableFilename(name) {
+            return isVideoFilename(name) || isDocFilename(name);
+        }
+
+        // 内容模式切换：video / doc
+        function switchContentType(mode) {
+            document.body.classList.toggle('doc-mode', mode === 'doc');
+            if (mode === 'video') {
+                document.getElementById('timelineSection').style.display = '';
+                document.getElementById('controlsBar').style.display = '';
+            }
+            updateDocToolbar();
+        }
+
+        function updateDocToolbar() {
+            const el = document.getElementById('docNoteCount');
+            if (el) el.textContent = annotations.length;
+        }
+
+        // 从 URL 加载文档（内网 / OSS 上的剧本）
+        async function loadDocumentFromUrl(url) {
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const text = await res.text();
+                const name = urlName(url) || 'document.md';
+                await loadDocumentFile(new File([text], name, { type: 'text/markdown' }), null, {
+                    id: 'doc:' + name,
+                    type: 'doc',
+                    name: stripExt(name),
+                    videoCount: 1,
+                    docUrl: url
+                });
+            } catch (e) {
+                alert('文档加载失败：' + (e.message || e) + '\n（注意跨域限制）');
+            }
+        }
+
+        // 加载文档（剧本）；project 可传入外部记录（工作目录 dirfile / 超级导入上下文）
+        async function loadDocumentFile(file, fileHandle, project) {
+            try {
+                docContent = await file.text();
+            } catch (e) {
+                alert('读取文档失败：' + (e.message || e));
+                return;
+            }
+            docFileName = file.name;
+            docFile = file;
+            selectedDocLine = 0;
+            videos = [];
+            totalDuration = 0;
+            window.currentWeDriveUrl = null;
+
+            await openProjectRecord(project || {
+                id: 'doc:' + file.name,
+                type: 'doc',
+                name: stripExt(file.name),
+                videoCount: 1,
+                fileHandles: fileHandle ? [fileHandle] : []
+            });
+            switchContentType('doc');
+            renderDocument();
+            document.getElementById('statusHint').innerHTML = `📄 文档审阅：${escapeHtml(file.name)}`;
+            document.getElementById('statusHint').style.color = 'var(--accent)';
+            document.getElementById('videoUrlInput').value = file.name;
+            renderWorkspaceList();
+        }
+
+        // 行级 Markdown 轻渲染：保留行结构（行号稳定），行内做粗体/斜体/代码
+        function renderInlineMd(escaped) {
+            return escaped
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        }
+
+        function docLineClass(line) {
+            if (/^#{1}\s/.test(line)) return 'doc-line-heading doc-line-h1';
+            if (/^#{2}\s/.test(line)) return 'doc-line-heading doc-line-h2';
+            if (/^#{3,}\s/.test(line)) return 'doc-line-heading doc-line-h3';
+            if (/^>\s?/.test(line)) return 'doc-line-quote';
+            if (/^(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) return 'doc-line-divider';
+            return '';
+        }
+
+        function renderDocument() {
+            const viewer = document.getElementById('docViewer');
+            const lines = docContent.split('\n');
+            viewer.innerHTML = lines.map((line, i) => {
+                const n = i + 1;
+                const hasNote = annotations.some(a => a.lineNumber === n);
+                const cls = [
+                    'doc-line',
+                    docLineClass(line),
+                    hasNote ? 'has-note' : '',
+                    n === selectedDocLine ? 'selected' : ''
+                ].filter(Boolean).join(' ');
+                return `<div class="${cls}" data-line="${n}">
+                    <span class="doc-line-num">${n}</span>
+                    <span class="doc-line-text">${renderInlineMd(escapeHtml(line)) || '&nbsp;'}</span>
+                </div>`;
+            }).join('');
+            // 事件委托：点击选行，双击加批注
+            viewer.onclick = (e) => {
+                const lineEl = e.target.closest('.doc-line');
+                if (!lineEl) return;
+                selectDocLine(parseInt(lineEl.dataset.line, 10));
+            };
+            viewer.ondblclick = (e) => {
+                const lineEl = e.target.closest('.doc-line');
+                if (!lineEl) return;
+                selectDocLine(parseInt(lineEl.dataset.line, 10));
+                addDocAnnotation(parseInt(lineEl.dataset.line, 10));
+            };
+            updateDocToolbar();
+        }
+
+        function selectDocLine(n) {
+            selectedDocLine = n;
+            document.querySelectorAll('#docViewer .doc-line').forEach(el => {
+                el.classList.toggle('selected', parseInt(el.dataset.line, 10) === n);
+            });
+        }
+
+        // 给某行加批注（复用批注编辑流）
+        function addDocAnnotation(lineNumber) {
+            if (!docContent) return;
+            const annotation = {
+                id: Date.now(),
+                lineNumber: lineNumber,
+                content: ''
+            };
+            annotations.push(annotation);
+            annotations.sort((a, b) => (a.lineNumber || 0) - (b.lineNumber || 0));
+            renderAnnotations();
+            renderDocument();
+            editAnnotation(annotation.id);
+        }
+
+        // 文档批注定位：滚动 + 闪烁
+        function jumpToDocLine(lineNumber) {
+            const el = document.querySelector(`#docViewer .doc-line[data-line="${lineNumber}"]`);
+            if (!el) return;
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.remove('flash');
+            void el.offsetWidth; // 重启动画
+            el.classList.add('flash');
+        }
+
+        // ---------- 导出：AI 修改 Prompt ----------
+        function exportAiPrompt() {
+            document.getElementById('exportMenu').style.display = 'none';
+            if (!annotations.length) {
+                alert('还没有批注，请先添加批注（文档：双击行；视频：按 M 或双击时间轴）');
+                return;
+            }
+            let prompt = '';
+            if (isDocMode()) {
+                // 剧本修改 prompt：附原文，AI 直接产出修改后的剧本
+                const notes = annotations.map((a, i) =>
+                    `${i + 1}. 第 ${a.lineNumber} 行：${a.content || '（未填写）'}`).join('\n');
+                const scriptLines = docContent.split('\n');
+                const numbered = scriptLines.map((l, i) => `${i + 1} | ${l}`).join('\n');
+                prompt = `你是一名专业的短剧剧本编辑。请根据下面的批注逐条修改剧本，输出修改后的完整 Markdown 剧本。
+
+## 修改要求（共 ${annotations.length} 条）
+
+${notes}
+
+## 剧本原文（行号 | 内容）
+
+\`\`\`
+${numbered}
+\`\`\`
+
+## 输出要求
+
+1. 逐条落实所有批注意见；批注只针对对应行附近的语境，可连带调整前后文
+2. 保持 Markdown 格式、场景结构与人物名写法不变
+3. 直接输出修改后的完整剧本（从第一行到最后一样，不要省略未修改部分）
+4. 在每处修改点的行尾追加标记 <!-- 批注N -->，N 为对应批注编号`;
+            } else {
+                // 视频审片 prompt：整理成给 AI/剪辑的修改指令
+                let grouped = '';
+                if (videos.length > 0) {
+                    const byVideo = {};
+                    annotations.forEach(a => {
+                        const key = a.videoName || '未知';
+                        (byVideo[key] = byVideo[key] || []).push(a);
+                    });
+                    Object.keys(byVideo).forEach(name => {
+                        grouped += `\n### ${name}\n`;
+                        byVideo[name].forEach(a => {
+                            grouped += `- ${formatTime(a.localTime || a.time)}：${a.content || '（未填写）'}\n`;
+                        });
+                    });
+                } else {
+                    annotations.forEach(a => {
+                        grouped += `- ${formatTime(a.time)}：${a.content || '（未填写）'}\n`;
+                    });
+                }
+                prompt = `你是一名短视频剪辑助理。以下是审片人标注的时间点修改意见，请把它们整理成一份清晰、可执行的剪辑修改清单（按时间排序，动词开头，保留原始时间码），并指出可能的连带调整（如转场、字幕、音效同步）。
+
+${grouped}`;
+            }
+            downloadBlob(new Blob([prompt], { type: 'text/markdown;charset=utf-8' }),
+                `AI修改指令_${(currentProject && currentProject.name) || '项目'}_${dateStr()}.md`);
+            navigator.clipboard.writeText(prompt).catch(() => {});
         }
     </script>
 </body>

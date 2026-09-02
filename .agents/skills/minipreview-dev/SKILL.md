@@ -1,7 +1,7 @@
 ---
 name: minipreview-dev
 description: "开发或修改 MiniPreview 视频审片工具（本目录下的纯静态单文件项目 index.html）时使用。包括：新增/修改功能、修 bug、改样式、更新版本号、部署上线、给上游提 PR 前的整理。凡涉及本项目的任何代码改动都应先读本 Skill。"
-version: 1.5.0
+version: 1.6.0
 ---
 
 # MiniPreview 项目开发 Skill
